@@ -159,8 +159,8 @@ function atlasFor(color) {
 
 // ---------------------------------------------------------------- text API
 /** Width in px of a (single-line) string. */
-export function measure(text) {
-  return Math.max(0, String(text).length * ADVANCE - 1);
+export function measure(text, scale = 1) {
+  return Math.max(0, String(text).length * ADVANCE - 1) * scale;
 }
 
 /** Greedy word wrap to maxWidth px. Honours explicit "\n". */
@@ -184,31 +184,33 @@ export function wrap(text, maxWidth) {
 
 /**
  * Draw text. opts: { color, align: 'left'|'center'|'right', shadow: color|null,
- * maxWidth (wraps), chars (draw only the first N chars: typewriter) }
+ * maxWidth (wraps), chars (draw only the first N chars: typewriter),
+ * scale (integer pixel multiplier), shadowOffset (px, default = scale) }
  * Returns the number of lines drawn.
  */
 export function drawText(ctx, text, x, y, opts = {}) {
-  const { color = '#f4f1e8', align = 'left', shadow = null, maxWidth = 0, chars = Infinity } = opts;
-  const lines = maxWidth ? wrap(text, maxWidth) : String(text).split('\n');
+  const { color = '#f4f1e8', align = 'left', shadow = null, maxWidth = 0, chars = Infinity, scale = 1 } = opts;
+  const so = opts.shadowOffset ?? scale;
+  const lines = maxWidth ? wrap(text, Math.floor(maxWidth / scale)) : String(text).split('\n');
   let left = chars;
   lines.forEach((line, li) => {
     const shown = line.slice(0, Math.max(0, left));
     left -= line.length + 1;
     let lx = Math.round(x);
-    const w = measure(line);
+    const w = measure(line, scale);
     if (align === 'center') lx = Math.round(x - w / 2);
     else if (align === 'right') lx = Math.round(x - w);
-    const ly = Math.round(y) + li * LINE_HEIGHT;
-    if (shadow) blit(ctx, shown, lx + 1, ly + 1, shadow);
-    blit(ctx, shown, lx, ly, color);
+    const ly = Math.round(y) + li * LINE_HEIGHT * scale;
+    if (shadow) blit(ctx, shown, lx + so, ly + so, shadow, scale);
+    blit(ctx, shown, lx, ly, color, scale);
   });
   return lines.length;
 }
 
-function blit(ctx, str, x, y, color) {
+function blit(ctx, str, x, y, color, scale = 1) {
   const atlas = atlasFor(color);
   for (let i = 0; i < str.length; i++) {
     const g = index.get(str[i]) ?? index.get('?');
-    if (str[i] !== ' ') ctx.drawImage(atlas, g * CELL, 0, CELL, CELL, x + i * ADVANCE, y, CELL, CELL);
+    if (str[i] !== ' ') ctx.drawImage(atlas, g * CELL, 0, CELL, CELL, x + i * ADVANCE * scale, y, CELL * scale, CELL * scale);
   }
 }

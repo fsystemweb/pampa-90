@@ -1,11 +1,12 @@
 // Pampa '90 - boot, canvas scaler and fixed-timestep loop.
 
 import { W, H, STEP } from './data/config.js';
-import { input, createTouchControls } from './engine/input.js';
+import { input, createTouchControls, bindCanvas } from './engine/input.js';
 import { scenes } from './engine/scene.js';
 import { initDisplay } from './engine/display.js';
 import { initAudio, toggleMute } from './engine/audio.js';
-import { applyDom } from './data/strings.js';
+import { applyDom, toggleLang } from './data/strings.js';
+import './scenes/index.js'; // registers every scene
 
 export { W, H, STEP };
 
@@ -58,13 +59,15 @@ let acc = 0;
 
 applyDom();
 initAudio();
+bindCanvas(canvas, W, H);
 createTouchControls();
 initDisplay({ onResize: resize, setPause });
 
-// Global actions: pause (P / Esc / touch II) and mute (M). Scenes can still read them.
+// Global actions: pause (P / Esc / touch II), mute (M) and language (L). Scenes can still read them.
 function handleGlobalActions() {
   if (input.pressed('pause')) setPause('user', !pauseReasons.has('user'));
   if (input.pressed('mute')) toggleMute();
+  if (input.pressed('lang')) toggleLang();
 }
 
 function frame(now) {
