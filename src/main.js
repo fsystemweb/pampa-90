@@ -1,17 +1,13 @@
 // Pampa '90 - boot, canvas scaler and fixed-timestep loop.
 
+import { W, H, STEP } from './data/config.js';
 import { input, createTouchControls } from './engine/input.js';
+import { scenes } from './engine/scene.js';
 import { initDisplay } from './engine/display.js';
-import { drawText } from './engine/font.js';
-import { initAudio, toggleMute, playSfx } from './engine/audio.js';
-import { music } from './engine/music.js';
-import { TRACKS } from './data/tracks.js';
-import { PAL } from './data/palette.js';
-import { applyDom, t } from './data/strings.js';
+import { initAudio, toggleMute } from './engine/audio.js';
+import { applyDom } from './data/strings.js';
 
-export const W = 320;
-export const H = 180;
-export const STEP = 1000 / 60; // fixed update step (ms)
+export { W, H, STEP };
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -51,10 +47,10 @@ export const isPaused = () => pauseReasons.size > 0;
 document.addEventListener('visibilitychange', () => setPause('visibility', document.hidden));
 
 // ---------------------------------------------------------------- loop
-// Scenes hook in here (scene manager arrives in M1).
+// The scene manager owns update/draw; `hooks` stays for low-level overrides.
 export const hooks = {
-  update(_dt) {},
-  draw(_ctx) {},
+  update: (dt) => scenes.update(dt),
+  draw: (c) => scenes.draw(c),
 };
 
 let last = performance.now();
@@ -62,7 +58,6 @@ let acc = 0;
 
 applyDom();
 initAudio();
-music.play(TRACKS.title); // temporary: placeholder theme starts on first input
 createTouchControls();
 initDisplay({ onResize: resize, setPause });
 
@@ -89,21 +84,14 @@ function frame(now) {
   while (acc >= STEP) {
     input.update();
     handleGlobalActions();
-    if (input.pressed('primary')) playSfx('blip');
     hooks.update(STEP / 1000);
     acc -= STEP;
   }
   hooks.draw(ctx);
 }
 
-// Placeholder scene until the scene manager lands.
-hooks.draw = (c) => {
-  c.fillStyle = PAL.sky;
-  c.fillRect(0, 0, W, H);
-  drawText(c, t('game.title'), W / 2, 24, { align: 'center', color: PAL.white, shadow: PAL.blueDark });
-  drawText(c, 'Welcome to La Pampa... nothing but sky.\nChe, dale! \u00A1A la chacra! \u00BFListo? ma\u00F1ana', W / 2, 60,
-    { align: 'center', color: PAL.black });
-  drawText(c, 'The quick brown fox jumps over the lazy dog 0123456789', 16, 110, { color: PAL.ink, maxWidth: 288 });
-};
+// Start scene: #scene=name in the URL (handy for dev), otherwise the title.
+const startScene = new URLSearchParams(location.hash.slice(1)).get('scene') || 'title';
+scenes.go(startScene);
 
 requestAnimationFrame(frame);
