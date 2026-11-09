@@ -60,10 +60,10 @@ export function drawBar(ctx, x, y, w, h, value, { fg = PAL.teal, bg = PAL.ink, b
 // ---------------------------------------------------------------- button prompts
 const KEYBOARD = {
   primary: 'SPACE', secondary: 'B', up: 'UP', down: 'DOWN', left: 'LEFT', right: 'RIGHT',
-  pause: 'P', mute: 'M', lang: 'L',
+  pause: 'P', mute: 'M', lang: 'L', move: 'ARROWS',
 };
-const GAMEPAD = { primary: 'A', secondary: 'B', pause: 'START' };
-const TOUCH = { primary: 'A', secondary: 'B', pause: 'II', up: '^', down: 'v', left: '<', right: '>' };
+const GAMEPAD = { primary: 'A', secondary: 'B', pause: 'START', move: 'STICK' };
+const TOUCH = { primary: 'A', secondary: 'B', pause: 'II', up: '^', down: 'v', left: '<', right: '>', move: 'D-PAD' };
 
 /** Text for an action on the device in use ('SPACE' on keyboard, 'A' on touch / pad). */
 export function promptLabel(action, device = input.device) {

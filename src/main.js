@@ -93,8 +93,11 @@ function frame(now) {
   hooks.draw(ctx);
 }
 
-// Start scene: #scene=name in the URL (handy for dev), otherwise the title.
-const startScene = new URLSearchParams(location.hash.slice(1)).get('scene') || 'title';
-scenes.go(startScene);
+// Start scene: #scene=name&key=value... in the URL (handy for dev; extra keys become params,
+// e.g. #scene=briefing&level=3), otherwise the title.
+const hash = new URLSearchParams(location.hash.slice(1));
+const startParams = {};
+for (const [k, v] of hash) if (k !== 'scene') startParams[k] = Number.isNaN(Number(v)) ? v : Number(v);
+scenes.go(hash.get('scene') || 'title', startParams);
 
 requestAnimationFrame(frame);
