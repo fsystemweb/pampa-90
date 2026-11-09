@@ -22,6 +22,12 @@ src/main.js          boot, loop, scaler
 src/engine/          input, audio, sprites, scene, text, tween, save
 src/scenes/          title, intro, levels, results, ending
 src/data/            palette, strings
-assets/              final art + audio (shipped)
+assets/              shipped assets; assets/sprites/atlas.* is a reference sheet of the code-generated sprites
+tools/               export-atlas.sh regenerates the atlas (needs python3 + google-chrome)
 reference/           mood/pose reference screenshots (NOT shipped)
 ```
+
+## Dev helpers
+
+- `index.html#scene=<name>` starts at any scene (e.g. `title`, `dev-ui`).
+- `index.html#scene=dev-sprites&page=N` browses every sprite (arrows = page, Space = background).

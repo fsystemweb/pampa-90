@@ -1,0 +1,36 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Sprite atlas export</title>
+<body style="margin:0;background:#222">
+<canvas id="c"></canvas>
+<pre id="manifest" hidden></pre><pre id="png" hidden></pre>
+<script type="module">
+// Packs every generated sprite into one sheet. Used by tools/export-atlas.sh.
+import { listSprites } from '../src/data/sprites/index.js';
+import { drawMap } from '../src/engine/sprites.js';
+
+const PAD = 2, MAX_W = 512;
+const items = [];
+for (const { name, frames } of listSprites()) frames.forEach((f, i) => items.push({ name, frame: i, spr: f }));
+
+// shelf packing, tallest first within the width limit
+items.sort((a, b) => b.spr.h - a.spr.h);
+let x = PAD, y = PAD, rowH = 0, usedW = 0;
+for (const it of items) {
+  if (x + it.spr.w + PAD > MAX_W) { x = PAD; y += rowH + PAD; rowH = 0; }
+  it.x = x; it.y = y;
+  x += it.spr.w + PAD;
+  rowH = Math.max(rowH, it.spr.h);
+  usedW = Math.max(usedW, x);
+}
+const H = y + rowH + PAD;
+const c = document.getElementById('c');
+c.width = usedW; c.height = H;
+const ctx = c.getContext('2d');
+for (const it of items) drawMap(ctx, it.spr.rows, it.x, it.y, it.spr.pal);
+
+const manifest = { width: usedW, height: H, sprites: items.map(({ name, frame, x, y, spr }) => ({ name, frame, x, y, w: spr.w, h: spr.h, anchor: [spr.ax, spr.ay] })) };
+document.getElementById('manifest').textContent = JSON.stringify(manifest, null, 1);
+document.getElementById('png').textContent = c.toDataURL('image/png');
+document.title = 'ready';
+</script>
