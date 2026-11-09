@@ -132,7 +132,7 @@ html, body {
 }
 
 /* ---------------------------------------------------------------- fullscreen button */
-#fs-btn {
+#fs-btn, #mute-btn {
   position: fixed;
   top: max(8px, env(safe-area-inset-top));
   left: max(8px, env(safe-area-inset-left));
@@ -147,3 +147,6 @@ html, body {
   cursor: pointer;
 }
 #fs-btn[hidden] { display: none; }
+#mute-btn { left: calc(max(8px, env(safe-area-inset-left)) + 44px); }
+#mute-btn.off { text-decoration: line-through; opacity: 0.6; }
+#fs-btn:focus-visible, #mute-btn:focus-visible { outline: 2px solid #f7d31f; }
