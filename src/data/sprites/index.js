@@ -1,10 +1,12 @@
 // Sprite registry. Every game sprite is generated in code (src/engine/pix.js)
 // from small recipes, so there are no image files to load.
+//   SPRITES.cow.walk[0..3] / .stand / .moo, SPRITES.icons.warn
 //   SPRITES.player.idle / .run[0..3] / .jump / .kick[0..2] / .back / .lying ...
 //   frameAt(SPRITES.player.run, time, 10)
 import { humans } from './humans.js';
+import { animals } from './animals.js';
 
-export const SPRITES = { ...humans };
+export const SPRITES = { ...humans, ...animals };
 
 /** Flatten SPRITES into [{ name, frames: [sprite, ...] }] (used by the dev viewer and atlas export). */
 export function listSprites(tree = SPRITES, prefix = '') {
