@@ -1,6 +1,7 @@
 // Pampa '90 - boot, canvas scaler and fixed-timestep loop.
 
 import { input, createTouchControls } from './engine/input.js';
+import { initDisplay } from './engine/display.js';
 
 export const W = 320;
 export const H = 180;
@@ -50,10 +51,11 @@ export const hooks = {
   draw(_ctx) {},
 };
 
-createTouchControls();
-
 let last = performance.now();
 let acc = 0;
+
+createTouchControls();
+initDisplay({ onResize: resize, setPause });
 
 // Global pause toggle (P / Esc / touch II). Scenes can still read the action.
 function handlePauseAction() {
