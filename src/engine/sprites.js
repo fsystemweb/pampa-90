@@ -45,3 +45,31 @@ export function drawMap(ctx, rows, x, y, pal, { flip = false, scale = 1 } = {}) 
   ctx.drawImage(cv, 0, 0, w, h);
   ctx.restore();
 }
+
+// ---------------------------------------------------------------- sprite objects
+// A sprite object is { rows, pal, w, h, ax, ay } where (ax, ay) is the anchor
+// (default: bottom-centre, i.e. the feet).
+
+/** Build a sprite object from a pix Grid (or string rows) and a palette. */
+export function defineSprite(gridOrRows, pal, anchor) {
+  const rows = Array.isArray(gridOrRows) ? gridOrRows : gridOrRows.rows();
+  const w = Math.max(...rows.map((r) => r.length));
+  const h = rows.length;
+  return { rows, pal, w, h, ax: anchor?.[0] ?? Math.floor(w / 2), ay: anchor?.[1] ?? h };
+}
+
+/**
+ * Draw a sprite object with its anchor at (x, y).
+ * opts: { flip, scale, anchor: 'feet' (default) | 'tl' | 'center' }
+ */
+export function drawSprite(ctx, spr, x, y, { flip = false, scale = 1, anchor = 'feet' } = {}) {
+  let ox = spr.ax;
+  let oy = spr.ay;
+  if (anchor === 'tl') ox = oy = 0;
+  else if (anchor === 'center') { ox = spr.w / 2; oy = spr.h / 2; }
+  if (flip) ox = spr.w - ox;
+  drawMap(ctx, spr.rows, x - ox * scale, y - oy * scale, spr.pal, { flip, scale });
+}
+
+/** Pick the frame of an animation (array of sprites) for time t at fps. */
+export const frameAt = (frames, t, fps = 8) => frames[Math.floor(t * fps) % frames.length];
