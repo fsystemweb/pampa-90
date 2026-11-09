@@ -4,6 +4,8 @@ import { input, createTouchControls } from './engine/input.js';
 import { initDisplay } from './engine/display.js';
 import { drawText } from './engine/font.js';
 import { initAudio, toggleMute, playSfx } from './engine/audio.js';
+import { music } from './engine/music.js';
+import { TRACKS } from './data/tracks.js';
 import { PAL } from './data/palette.js';
 import { applyDom, t } from './data/strings.js';
 
@@ -60,6 +62,7 @@ let acc = 0;
 
 applyDom();
 initAudio();
+music.play(TRACKS.title); // temporary: placeholder theme starts on first input
 createTouchControls();
 initDisplay({ onResize: resize, setPause });
 
