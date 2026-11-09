@@ -2,6 +2,8 @@
 
 import { input, createTouchControls } from './engine/input.js';
 import { initDisplay } from './engine/display.js';
+import { drawText } from './engine/font.js';
+import { PAL } from './data/palette.js';
 
 export const W = 320;
 export const H = 180;
@@ -87,8 +89,12 @@ function frame(now) {
 
 // Placeholder scene until the scene manager lands.
 hooks.draw = (c) => {
-  c.fillStyle = '#bfe3f5';
+  c.fillStyle = PAL.sky;
   c.fillRect(0, 0, W, H);
+  drawText(c, "PAMPA '90", W / 2, 24, { align: 'center', color: PAL.white, shadow: PAL.blueDark });
+  drawText(c, 'Welcome to La Pampa... nothing but sky.\nChe, dale! \u00A1A la chacra! \u00BFListo? ma\u00F1ana', W / 2, 60,
+    { align: 'center', color: PAL.black });
+  drawText(c, 'The quick brown fox jumps over the lazy dog 0123456789', 16, 110, { color: PAL.ink, maxWidth: 288 });
 };
 
 requestAnimationFrame(frame);
