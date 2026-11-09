@@ -36,6 +36,27 @@ export const OUTFITS = {
     ...base, stripe: PAL.blue, stripe2: PAL.blue, shorts: PAL.blue, shortsDark: PAL.blueDark,
     long: true, shoe: PAL.white, shoeDark: PAL.silver, headband: PAL.yellow,
   },
+  // L3 friend who crosses the ball: yellow shirt, teal shorts
+  friend: {
+    ...base, skin: '#c98d62', skinDark: '#9a6644', hair: PAL.black,
+    shirt: PAL.yellow, shirtDark: PAL.goldDark, stripe: PAL.teal, stripe2: PAL.white,
+    shorts: PAL.tealDark, shortsDark: '#0a4f4c', sock: PAL.yellow, sockDark: PAL.goldDark,
+    shoe: PAL.white, shoeDark: PAL.silver, headband: null,
+  },
+  // L3 goalkeeper: teal/green long-sleeve top, black shorts, yellow gloves
+  keeper: {
+    ...base, skin: '#e0a878', skinDark: '#b07850', hair: PAL.wood,
+    shirt: PAL.teal, shirtDark: PAL.tealDark, stripe: PAL.grassDark, stripe2: PAL.yellow,
+    shorts: PAL.ink, shortsDark: PAL.black, sock: PAL.tealDark, sockDark: '#0a4f4c',
+    shoe: PAL.black, shoeDark: PAL.ink, glove: PAL.yellow, longSleeves: true, headband: null,
+  },
+  // L4 doctor: white sweatshirt, navy shorts, glasses, grey hair
+  doctor: {
+    ...base, skin: '#f0c8a0', skinDark: '#c89a78', hair: PAL.silver,
+    shirt: PAL.white, shirtDark: PAL.silver, stripe: PAL.white, stripe2: PAL.silver,
+    shorts: PAL.blueDark, shortsDark: PAL.ink, sock: PAL.white, sockDark: PAL.silver,
+    shoe: PAL.grey, shoeDark: PAL.ink, longSleeves: true, glasses: true, headband: null,
+  },
   // teal windbreaker pace-runner (L2 companion)
   runnerTeal: {
     ...base, skin: '#c98d62', skinDark: '#9a6644', hair: PAL.black,
@@ -53,7 +74,7 @@ function palFor(o) {
     a: o.shirt, A: o.shirtDark, b: o.stripe, y: o.stripe2,
     c: o.shorts, C: o.shortsDark, w: o.sock, W: o.sockDark,
     k: o.shoe, K: o.shoeDark, g: PAL.silver, G: o.glove ?? o.skin,
-    m: PAL.red,
+    m: PAL.red, q: PAL.wood, p: PAL.white, t: PAL.skin,
   };
 }
 
@@ -153,6 +174,7 @@ export function sideFigure(o, p) {
 
   leg(p.legF, 8, false);
   arm(p.armF, 8, false);
+  p.after?.(g, X);
   return g;
 }
 
@@ -208,6 +230,7 @@ export function frontFigure(o, p, back = false) {
 
   arm(p.armL, 2);
   arm(p.armR, 12);
+  p.after?.(g, X);
   return g;
 }
 
@@ -261,6 +284,18 @@ export const SIDE_POSES = {
   },
 };
 
+// doctor sitting on the grass (facing right; flip to face the other way), holding a clipboard
+SIDE_POSES.sit = {
+  bob: 3, lean: 1,
+  armB: [[9, 16], [11, 17]], armF: [[10, 16], [12, 17]],
+  legB: { knee: [10, 19], foot: [11, 22] }, legF: { knee: [11, 21], foot: [14, 22] },
+  after: (g, X) => {
+    g.rect(X(12), 14, 4, 6, 'q'); // clipboard
+    g.rect(X(13), 15, 2, 4, 'p');
+    g.rect(X(12), 17, 2, 2, 'S'); // hand over the board
+  },
+};
+
 export const FRONT_POSES = {
   stand: {
     armL: [[2, 12], [2, 15]], armR: [[13, 12], [13, 15]],
@@ -269,6 +304,17 @@ export const FRONT_POSES = {
   jump: {
     armL: [[1, 7], [1, 4]], armR: [[14, 7], [14, 4]],
     legL: { knee: [5, 19], foot: [5, 21] }, legR: { knee: [10, 18], foot: [8, 20] },
+    mouth: 'open',
+  },
+  thumbsUp: {
+    armL: [[2, 12], [2, 15]], armR: [[13, 8], [13, 5]],
+    legL: { knee: [5, 20], foot: [5, 22] }, legR: { knee: [9, 20], foot: [9, 22] },
+    mouth: 'open',
+    after: (g, X) => { g.set(X(13), 4, 's'); g.set(X(13), 3, 's'); }, // thumb up
+  },
+  armsUp: { // used for diving/jumping saves
+    armL: [[2, 5], [2, 1]], armR: [[13, 5], [13, 1]],
+    legL: { knee: [5, 20], foot: [5, 22] }, legR: { knee: [9, 20], foot: [9, 22] },
     mouth: 'open',
   },
   guard: { // keeper-style ready stance: arms out, knees bent
@@ -303,7 +349,41 @@ export function buildPlayerSet(outfit, { full = true } = {}) {
   return set;
 }
 
+/** Friend crosser: same moves as the player, plus a throw/cross pose. */
+const buildFriendSet = () => buildPlayerSet(OUTFITS.friend);
+
+/** Keeper (front view): ready stance, jump save, and left/right dives (rotated armsUp). */
+function buildKeeperSet() {
+  const o = OUTFITS.keeper;
+  const pal = palFor(o);
+  const anchor = [OX + 9, GH + 2];
+  const front = (name) => frontFigure(o, FRONT_POSES[name], false);
+  return {
+    stand: finish(front('stand'), pal, anchor),
+    guard: finish(front('guard'), pal, anchor),
+    jump: finish(front('armsUp'), pal, anchor),
+    diveR: finish(front('armsUp').rotCW(), pal), // toward the keeper's left on screen right
+    diveL: finish(front('armsUp').rotCCW(), pal),
+  };
+}
+
+/** Doctor: standing + sitting (clipboard) in side view, thumbs-up in front view. */
+function buildDoctorSet() {
+  const o = OUTFITS.doctor;
+  const pal = palFor(o);
+  const anchor = [OX + 9, GH + 2];
+  return {
+    stand: finish(sideFigure(o, SIDE_POSES.stand), pal, anchor),
+    sit: finish(sideFigure(o, SIDE_POSES.sit), pal, anchor),
+    front: finish(frontFigure(o, FRONT_POSES.stand), pal, anchor),
+    thumbsUp: finish(frontFigure(o, FRONT_POSES.thumbsUp), pal, anchor),
+  };
+}
+
 export const humans = {
+  friend: buildFriendSet(),
+  keeper: buildKeeperSet(),
+  doctor: buildDoctorSet(),
   player: buildPlayerSet(OUTFITS.player),
   playerJog: buildPlayerSet(OUTFITS.playerJog, { full: false }),
   playerTrack: buildPlayerSet(OUTFITS.playerTrack, { full: false }),
