@@ -38,7 +38,7 @@ export const OUTFITS = {
   },
   // L3 friend who crosses the ball: yellow shirt, teal shorts
   friend: {
-    ...base, skin: '#c98d62', skinDark: '#9a6644', hair: PAL.black,
+    ...base, skin: '#c98d62', skinDark: '#9a6644', hair: '#ecd27a',
     shirt: PAL.yellow, shirtDark: PAL.goldDark, stripe: PAL.teal, stripe2: PAL.white,
     shorts: PAL.tealDark, shortsDark: '#0a4f4c', sock: PAL.yellow, sockDark: PAL.goldDark,
     shoe: PAL.white, shoeDark: PAL.silver, headband: null,
