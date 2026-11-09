@@ -7,7 +7,7 @@
 //
 // Call input.update() once at the start of every fixed step.
 
-export const ACTIONS = ['left', 'right', 'up', 'down', 'primary', 'secondary', 'pause', 'mute'];
+export const ACTIONS = ['left', 'right', 'up', 'down', 'primary', 'secondary', 'pause', 'mute', 'lang'];
 
 const KEYMAP = {
   ArrowLeft: 'left', KeyA: 'left',
@@ -18,6 +18,7 @@ const KEYMAP = {
   KeyB: 'secondary', KeyX: 'secondary', ShiftLeft: 'secondary', ShiftRight: 'secondary',
   KeyP: 'pause', Escape: 'pause',
   KeyM: 'mute',
+  KeyL: 'lang',
 };
 
 const none = () => Object.fromEntries(ACTIONS.map((a) => [a, false]));
@@ -26,6 +27,9 @@ const kbd = none();
 const touch = none();
 const pad = none();
 const latch = none(); // taps shorter than one step still register as "pressed"
+let device = 'kbd'; // last used device: 'kbd' | 'touch' | 'pad' | 'mouse'
+let pendingTaps = [];
+let taps = [];
 let cur = none();
 let prev = none();
 let edgeDown = none();
@@ -50,6 +54,7 @@ window.addEventListener('keydown', (e) => {
   if (!a) return;
   e.preventDefault();
   firstInput();
+  device = 'kbd';
   if (!e.repeat) latch[a] = true;
   kbd[a] = true;
 });
@@ -73,6 +78,7 @@ function press(action, id) {
   holders[action].add(id);
   touch[action] = true;
   latch[action] = true;
+  device = 'touch';
   firstInput();
 }
 function release(action, id) {
@@ -120,6 +126,17 @@ export function createTouchControls(parent = document.body) {
   return root;
 }
 
+// ---------------------------------------------------------------- canvas taps
+// Taps/clicks on the game canvas, converted to internal 320x180 coordinates.
+export function bindCanvas(canvas, w, h) {
+  canvas.addEventListener('pointerdown', (e) => {
+    const r = canvas.getBoundingClientRect();
+    pendingTaps.push({ x: ((e.clientX - r.left) / r.width) * w, y: ((e.clientY - r.top) / r.height) * h });
+    device = e.pointerType === 'mouse' ? 'mouse' : 'touch';
+    firstInput();
+  });
+}
+
 // ---------------------------------------------------------------- gamepad
 function pollGamepad() {
   const g = (navigator.getGamepads?.() ?? []).find((p) => p && p.connected);
@@ -134,13 +151,18 @@ function pollGamepad() {
   pad.secondary = b(1) || b(2);
   pad.pause = b(9);
   pad.mute = false;
-  if (g && ACTIONS.some((a) => pad[a])) firstInput();
+  if (g && ACTIONS.some((a) => pad[a])) {
+    device = 'pad';
+    firstInput();
+  }
 }
 
 // ---------------------------------------------------------------- per step
 export const input = {
   update() {
     pollGamepad();
+    taps = pendingTaps;
+    pendingTaps = [];
     prev = cur;
     cur = none();
     edgeDown = none();
@@ -152,11 +174,17 @@ export const input = {
       latch[a] = false;
     }
   },
+  /** Last device used: 'kbd' | 'touch' | 'pad' | 'mouse'. */
+  get device() { return device; },
+  /** Taps on the canvas this step, [{x, y}] in game pixels. */
+  taps: () => taps,
+  /** First tap this step (optionally only inside {x,y,w,h}), or null. */
+  tap: (rect) => taps.find((p) => !rect || (p.x >= rect.x && p.x < rect.x + rect.w && p.y >= rect.y && p.y < rect.y + rect.h)) || null,
   down: (a) => cur[a],
   pressed: (a) => edgeDown[a],
   released: (a) => edgeUp[a],
   /** -1 / 0 / 1 from a left/right (or up/down) pair. */
   axis: (neg, pos) => (cur[pos] ? 1 : 0) - (cur[neg] ? 1 : 0),
   /** True if any action fired this step (for "press any key"). */
-  any: () => ACTIONS.some((a) => edgeDown[a]),
+  any: () => taps.length > 0 || ACTIONS.some((a) => edgeDown[a]),
 };
