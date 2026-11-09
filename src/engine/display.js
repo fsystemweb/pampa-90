@@ -1,4 +1,6 @@
-// Display helpers: fullscreen toggle + landscape-only enforcement.
+// Display helpers: fullscreen toggle, mute button, landscape-only enforcement.
+
+import { isMuted, toggleMute, onMuteChange } from './audio.js';
 
 const root = document.documentElement;
 
@@ -32,6 +34,19 @@ export function initDisplay({ onResize, setPause }) {
     // Don't let the click leak into the game as a tap.
     btn.addEventListener('pointerdown', (e) => e.stopPropagation());
   }
+  // Mute button (same state as the M key).
+  const mute = document.getElementById('mute-btn');
+  if (mute) {
+    const show = (m) => {
+      mute.classList.toggle('off', m);
+      mute.setAttribute('aria-pressed', String(m));
+    };
+    show(isMuted());
+    onMuteChange(show);
+    mute.addEventListener('click', toggleMute);
+    mute.addEventListener('pointerdown', (e) => e.stopPropagation());
+  }
+
   const onFs = () => onResize();
   document.addEventListener('fullscreenchange', onFs);
   document.addEventListener('webkitfullscreenchange', onFs);

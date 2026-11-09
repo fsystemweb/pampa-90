@@ -3,6 +3,7 @@
 import { input, createTouchControls } from './engine/input.js';
 import { initDisplay } from './engine/display.js';
 import { drawText } from './engine/font.js';
+import { initAudio, toggleMute, playSfx } from './engine/audio.js';
 import { PAL } from './data/palette.js';
 import { applyDom, t } from './data/strings.js';
 
@@ -58,12 +59,14 @@ let last = performance.now();
 let acc = 0;
 
 applyDom();
+initAudio();
 createTouchControls();
 initDisplay({ onResize: resize, setPause });
 
-// Global pause toggle (P / Esc / touch II). Scenes can still read the action.
-function handlePauseAction() {
+// Global actions: pause (P / Esc / touch II) and mute (M). Scenes can still read them.
+function handleGlobalActions() {
   if (input.pressed('pause')) setPause('user', !pauseReasons.has('user'));
+  if (input.pressed('mute')) toggleMute();
 }
 
 function frame(now) {
@@ -75,14 +78,15 @@ function frame(now) {
     // keep polling so the user can un-pause
     if (pauseReasons.size === 1 && pauseReasons.has('user')) {
       input.update();
-      handlePauseAction();
+      handleGlobalActions();
     }
     return;
   }
   acc += elapsed;
   while (acc >= STEP) {
     input.update();
-    handlePauseAction();
+    handleGlobalActions();
+    if (input.pressed('primary')) playSfx('blip');
     hooks.update(STEP / 1000);
     acc -= STEP;
   }
