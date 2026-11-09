@@ -9,7 +9,8 @@
 //
 // Register a factory so each visit gets a fresh scene:
 //   scenes.register('title', () => new TitleScene());
-//   scenes.go('title');                 replace everything
+//   scenes.go('title');                 replace everything, with a wipe
+//   scenes.go('title', params, { wipe: 'dither' | 'iris' | 'none', focus: {x,y}, dur: 0.35 })
 //   scenes.push('pause'); scenes.pop(); overlays on top of the current scene
 //
 // Unregistered names get a "coming soon" stub so the flow can be walked
@@ -18,11 +19,26 @@
 import { W, H } from '../data/config.js';
 import { input } from './input.js';
 import { drawText } from './font.js';
-import { tweens } from './tween.js';
+import { tweens, ease } from './tween.js';
+import { drawWipe } from './transition.js';
 import { PAL } from '../data/palette.js';
 
 const registry = new Map();
 let stack = [];
+let trans = null; // { phase: 'out'|'in', t, dur, kind, focus, next }
+
+function swap(name, params) {
+  const old = stack;
+  stack = [];
+  for (let i = old.length - 1; i >= 0; i--) old[i].exit?.();
+  tweens.clear();
+  stack.push(enter(make(name), params));
+}
+
+function enter(scene, params) {
+  scene.enter?.(params);
+  return scene;
+}
 
 function make(name) {
   const factory = registry.get(name);
@@ -33,7 +49,7 @@ function stubScene(name) {
   return {
     name,
     update() {
-      if (input.pressed('primary') || input.pressed('pause')) scenes.go('title');
+      if (input.pressed('primary') || input.pressed('pause')) scenes.go('title', null, { wipe: 'dither' });
     },
     draw(ctx) {
       ctx.fillStyle = PAL.ink;
@@ -43,11 +59,6 @@ function stubScene(name) {
       drawText(ctx, 'PRESS SPACE', W / 2, H / 2 + 20, { align: 'center', color: PAL.grey });
     },
   };
-}
-
-function enter(scene, params) {
-  scene.enter?.(params);
-  return scene;
 }
 
 export const scenes = {
@@ -64,13 +75,28 @@ export const scenes = {
     return stack.length;
   },
 
-  /** Replace the whole stack with a fresh scene. */
-  go(name, params) {
-    const old = stack;
-    stack = [];
-    for (let i = old.length - 1; i >= 0; i--) old[i].exit?.();
-    tweens.clear();
-    stack.push(enter(make(name), params));
+  /** True while a wipe is running (scenes can ignore input meanwhile). */
+  get busy() {
+    return !!trans;
+  },
+
+  /**
+   * Replace the whole stack with a fresh scene, covering the swap with a wipe.
+   * The first scene (nothing to cover) and wipe:'none' switch instantly.
+   */
+  go(name, params, opts = {}) {
+    const wipe = opts.wipe ?? 'iris';
+    if (!stack.length || wipe === 'none') {
+      trans = null;
+      swap(name, params);
+      return;
+    }
+    const dur = opts.dur ?? 0.35;
+    if (trans && trans.phase === 'out') {
+      trans.next = { name, params }; // retarget a wipe already closing
+      return;
+    }
+    trans = { phase: 'out', t: 0, dur, kind: wipe, focus: opts.focus, next: { name, params } };
   },
 
   /** Put a scene on top (e.g. pause menu); the one below stops updating. */
@@ -86,8 +112,19 @@ export const scenes = {
   },
 
   update(dt) {
+    if (trans) {
+      trans.t += dt;
+      if (trans.phase === 'out' && trans.t >= trans.dur) {
+        swap(trans.next.name, trans.next.params);
+        trans.phase = 'in';
+        trans.t = 0;
+      } else if (trans.phase === 'in' && trans.t >= trans.dur) {
+        trans = null;
+      }
+    }
     tweens.update(dt);
-    this.current?.update?.(dt);
+    // the outgoing scene is frozen while the wipe closes over it
+    if (!trans || trans.phase === 'in') this.current?.update?.(dt);
   },
 
   draw(ctx) {
@@ -95,5 +132,9 @@ export const scenes = {
     let from = stack.length - 1;
     while (from > 0 && stack[from].overlay) from--;
     for (let i = Math.max(0, from); i < stack.length; i++) stack[i].draw?.(ctx);
+    if (trans) {
+      const p = ease.inOutQuad(Math.min(1, trans.t / trans.dur));
+      drawWipe(ctx, trans.kind, trans.phase === 'out' ? p : 1 - p, trans.focus);
+    }
   },
 };
