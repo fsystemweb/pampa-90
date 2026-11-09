@@ -9,7 +9,7 @@ export const STRINGS = {
   en: {
     // ---- generic / UI
     'game.title': "PAMPA '90",
-    'game.subtitle': 'A preseason in nowhere',
+    'game.subtitle': 'One boot in the pampas',
     'ui.pressStart': 'PRESS START',
     'ui.tapStart': 'TAP TO START',
     'ui.skip': 'SKIP',
@@ -87,7 +87,7 @@ export const STRINGS = {
 
   es: {
     'game.title': "PAMPA '90",
-    'game.subtitle': 'Una pretemporada en la nada',
+    'game.subtitle': 'Un pie en la pampa',
     'ui.pressStart': 'APRETA START',
     'ui.tapStart': 'TOCA PARA EMPEZAR',
     'ui.skip': 'SALTAR',
