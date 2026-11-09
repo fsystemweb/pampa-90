@@ -1,5 +1,7 @@
 // Pampa '90 - boot, canvas scaler and fixed-timestep loop.
 
+import { input, createTouchControls } from './engine/input.js';
+
 export const W = 320;
 export const H = 180;
 export const STEP = 1000 / 60; // fixed update step (ms)
@@ -48,8 +50,15 @@ export const hooks = {
   draw(_ctx) {},
 };
 
+createTouchControls();
+
 let last = performance.now();
 let acc = 0;
+
+// Global pause toggle (P / Esc / touch II). Scenes can still read the action.
+function handlePauseAction() {
+  if (input.pressed('pause')) setPause('user', !pauseReasons.has('user'));
+}
 
 function frame(now) {
   requestAnimationFrame(frame);
@@ -57,10 +66,17 @@ function frame(now) {
   last = now;
   if (isPaused()) {
     acc = 0;
+    // keep polling so the user can un-pause
+    if (pauseReasons.size === 1 && pauseReasons.has('user')) {
+      input.update();
+      handlePauseAction();
+    }
     return;
   }
   acc += elapsed;
   while (acc >= STEP) {
+    input.update();
+    handlePauseAction();
     hooks.update(STEP / 1000);
     acc -= STEP;
   }
