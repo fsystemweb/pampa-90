@@ -34,4 +34,32 @@ export const TRACKS = {
       },
     ],
   },
+
+  // Intro cutscene: slow, dreamy D major (D | Bm | G | A), plane-over-the-pampas mood.
+  intro: {
+    bpm: 84,
+    channels: [
+      {
+        wave: 'pulse25', vol: 0.13, // lead
+        notes: [
+          'F#5:4 A5:4 F#5:4 D5:4',
+          'D5:4 F#5:4 B5:6 R:2',
+          'B5:4 G5:4 D5:4 B4:4',
+          'C#5:4 E5:4 A5:6 R:2',
+        ].join(' '),
+      },
+      {
+        wave: 'pulse50', vol: 0.06, // arpeggio
+        notes: [arp('D4', 'F#4', 'A4'), arp('B3', 'D4', 'F#4'), arp('G3', 'B3', 'D4'), arp('A3', 'C#4', 'E4')].join(' '),
+      },
+      {
+        wave: 'triangle', vol: 0.28, // bass
+        notes: 'D2:8 A2:8 B1:8 F#2:8 G1:8 D2:8 A1:8 E2:8',
+      },
+      {
+        wave: 'noise', vol: 0.05, // soft hats
+        notes: 'H:2 R:2 H:2 R:2 H:2 R:2 H:2 R:2',
+      },
+    ],
+  },
 };
