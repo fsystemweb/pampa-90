@@ -19,7 +19,7 @@ import { drawHearts, drawBar } from '../engine/ui.js';
 import { rect, disc, skyBands } from '../engine/draw.js';
 import { SPRITES } from '../data/sprites/index.js';
 import { t } from '../data/strings.js';
-import { tween, after, clamp } from '../engine/tween.js';
+import { tween, after, clamp, ease } from '../engine/tween.js';
 import { Juice } from '../engine/juice.js';
 
 const GW = 88; // glass canvas (the mirror's opening)
@@ -32,6 +32,11 @@ const CUP = { x: 42, y: 176 };
 const BUCKET_X = 280;
 const BUCKET_REST = 160;
 const BUCKET_HIDDEN = 200;
+const POUR_FLIGHT_START = 0.25; // bucket is tipped, water leaves the lip
+const POUR_FLIGHT = 0.4; // water travel time lip -> target
+const POUR_TOTAL = 1.0;
+const TILT_MAX = 1.2; // radians
+const LIFT = 34; // the bucket is raised while pouring
 
 const TIME_LIMIT = 60; // seconds to clean the face
 const NEED = 0.95; // coverage needed
@@ -156,6 +161,7 @@ export class Level1Scene {
     this.bucketY = BUCKET_HIDDEN;
     this.meter = 0;
     this.goodSplashes = 0;
+    this.pour = null;
 
     this.msgKey = null;
     this.msgT = 0;
@@ -320,20 +326,49 @@ export class Level1Scene {
   }
 
   updateRinse(dt) {
+    if (this.pour) {
+      // the bucket is mid-pour: the result lands when the water arrives
+      this.pour.t += dt;
+      if (!this.pour.landed && this.pour.t >= POUR_FLIGHT_START + POUR_FLIGHT) {
+        this.pour.landed = true;
+        this.land(this.pour.good);
+      }
+      if (this.pour.t >= POUR_TOTAL) this.pour = null;
+      return;
+    }
     if (input.down('primary')) {
       this.meter = Math.min(1, this.meter + dt / 1.1);
     }
     if (input.released('primary')) {
       const v = this.meter;
       this.meter = 0;
-      if (v >= GREEN[0] && v <= GREEN[1]) this.splash(true);
-      else this.splash(false);
+      this.splash(v >= GREEN[0] && v <= GREEN[1]);
     }
   }
 
+  /** Release: tilt the bucket and send the water from its lip. */
   splash(good) {
-    const bx = BUCKET_X;
-    this.juice.emit(PAL.sky, bx - 6, BUCKET_REST - 8, 14, { speed: 70, life: 0.6, gravity: 180, up: 0.8 });
+    this.pour = { t: 0, good, landed: false };
+    playSfx('swish');
+  }
+
+  /** Where the water ends up: on the face for a good splash, short on the grass for a miss. */
+  pourTarget(good) {
+    return good ? { x: GO.x + GCX + 6, y: GO.y + 62 } : { x: 214, y: 152 };
+  }
+
+  /** Bucket tilt 0..1 over the pour (tips quickly, holds, rights itself). */
+  get tilt() {
+    if (!this.pour) return 0;
+    const t = this.pour.t;
+    if (t < POUR_FLIGHT_START) return ease.outQuad(t / POUR_FLIGHT_START);
+    if (t < POUR_TOTAL - 0.3) return 1;
+    return 1 - ease.inOutQuad((t - (POUR_TOTAL - 0.3)) / 0.3);
+  }
+
+  land(good) {
+    const tg = this.pourTarget(good);
+    this.juice.emit(PAL.sky, tg.x, tg.y, good ? 16 : 8, { speed: 60, life: 0.5, gravity: 180, up: 0.8 });
     if (!good) {
       playSfx('blip');
       this.say('l1.again', 0.9);
@@ -384,6 +419,47 @@ export class Level1Scene {
     c.drawImage(this.out, GO.x + jx, GO.y + jy);
   }
 
+  /** The bucket tips around its bottom-left corner so the lip points at the face. */
+  drawBucket(c) {
+    const k = this.tilt;
+    if (k <= 0) return drawSprite(c, SPRITES.shave.bucketWater, BUCKET_X, this.bucketY);
+    c.save();
+    c.translate(BUCKET_X - 8, this.bucketY - LIFT * k);
+    c.rotate(-TILT_MAX * k);
+    drawSprite(c, SPRITES.shave.bucketWater, 8, 0);
+    c.restore();
+  }
+
+  /** Lip position of the fully tipped bucket on screen. */
+  lipPos() {
+    const a = -TILT_MAX;
+    const lx = -2; // rim's left corner relative to the pivot
+    const ly = -14;
+    return {
+      x: BUCKET_X - 8 + lx * Math.cos(a) - ly * Math.sin(a),
+      y: this.bucketY - LIFT + lx * Math.sin(a) + ly * Math.cos(a),
+    };
+  }
+
+  /** The water arc from the lip to where it lands, drawn as droplets up to its head. */
+  drawStream(c) {
+    if (!this.pour) return;
+    const { t, good } = this.pour;
+    const u = clamp((t - POUR_FLIGHT_START) / POUR_FLIGHT, 0, 1.6);
+    if (u <= 0) return;
+    const a = this.lipPos();
+    const b = this.pourTarget(good);
+    const col = good ? PAL.skyHi : PAL.sky;
+    const head = Math.min(u, 1);
+    const tail = Math.max(0, u - 0.6);
+    for (let i = 0; i < 18; i++) {
+      const f = tail + (head - tail) * (i / 17);
+      const x = a.x + (b.x - a.x) * f;
+      const y = a.y + (b.y - a.y) * f - Math.sin(f * Math.PI) * 18;
+      rect(c, i % 3 === 0 ? PAL.white : col, Math.round(x), Math.round(y), 2, 2);
+    }
+  }
+
   draw(c) {
     const [sx, sy] = this.juice.offset();
     c.save();
@@ -404,7 +480,8 @@ export class Level1Scene {
 
     // cup on the ground, bucket slides in for the rinse
     drawSprite(c, SPRITES.shave.cupWater, CUP.x, CUP.y);
-    drawSprite(c, SPRITES.shave.bucketWater, BUCKET_X, this.bucketY);
+    this.drawBucket(c);
+    this.drawStream(c);
 
     // the blade: red mark for a nick, plus a clogged tint
     if (this.nickMark && this.nickT > 0) disc(c, PAL.red, this.nickMark.x, this.nickMark.y, 1);
