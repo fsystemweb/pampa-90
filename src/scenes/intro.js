@@ -1,7 +1,7 @@
 // Intro cutscene (~32 s, skippable): five panels with typewriter captions.
 //   1. a plane crosses the pampas at sunset
 //   2. it lands on the asphalt runway of Santa Rosa airport
-//   3. a modest terminal (hut + windsock), nearly a thousand people waiting on the tarmac
+//   3. a modest terminal (hut + windsock), a group of locals waiting on the tarmac
 //   4. the player steps out with a duffel bag and sees the crowd: "This is my people!"
 //   5. the farm of El Marito near Macachín: "Welcome to La Pampa... nothing but sky"
 //
@@ -51,13 +51,10 @@ function ground(c, horizon, { strip = null, surface = 'dirt', dark = false } = {
   }
 }
 
-// Small crowd of standing figures (existing character sprites), gently cheering when `cheer` > 0.
-function crowd(c, x0, y, pan, cheer = 0) {
-  const figs = [SPRITES.friend.idle, SPRITES.player.idle, SPRITES.playerJog.idle, SPRITES.playerTrack.idle];
-  for (let i = 0; i < 6; i++) {
-    const bob = i % 2 ? -cheer : 0;
-    drawSprite(c, figs[i % figs.length], x0 + i * 13 + pan, y + bob, { scale: 1 });
-  }
+// The crowd: a group of locals behind the airport fence (see props.js), swapping frames to cheer.
+function crowd(c, x0, y, pan, cheer = 0, tt = 0) {
+  const frames = SPRITES.intro.crowd;
+  drawSprite(c, cheer > 0 ? frameAt(frames, tt, 5) : frames[0], x0 + pan, y);
 }
 
 // Half-sunk sun: the ground drawn afterwards hides its lower half.
@@ -148,8 +145,8 @@ const PANELS = [
       const pan = -tt * 2.5; // slow camera drift
       trees(c, horizon, [20, 96 + pan * 0.3, 250 + pan * 0.3]);
       drawSprite(c, SPRITES.intro.hut, 98 + pan, 102);
-      drawSprite(c, frameAt(SPRITES.intro.windsock, tt, 2), 168 + pan, 102);
-      crowd(c, 186, 120, pan);
+      drawSprite(c, frameAt(SPRITES.intro.windsock, tt, 2), 156 + pan, 102);
+      crowd(c, 184, 122, pan);
       drawSprite(c, SPRITES.intro.plane[0], 36 + pan, 114, { scale: 1 });
     },
   },
@@ -175,7 +172,7 @@ const PANELS = [
       drawSprite(c, SPRITES.intro.duffel, x + 16, 112 + bob, { scale: 1 });
       // the crowd, cheering once he is out on the tarmac
       const cheer = tt > 4.2 ? Math.abs(Math.sin((tt - 4.2) * 8)) * 2 : 0;
-      crowd(c, 186, 120, 0, cheer);
+      crowd(c, 188, 124, 0, cheer, tt);
     },
   },
 
