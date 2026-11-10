@@ -87,7 +87,7 @@ function buildAssets() {
   let count = 0;
   for (let y = 0; y < GH; y++) {
     for (let x = 0; x < GW; x++) {
-      const onFace = inEllipse(x, y, GCX, 50, 23, 29) && y >= 47;
+      const onFace = inEllipse(x, y, GCX, 50, 23, 29) && y >= 51; // eyes are at y 47-48: keep them clear
       const onNeck = x >= 35 && x < 53 && y >= 73 && y < 94;
       if (onFace || onNeck) {
         target[y * GW + x] = 1;
