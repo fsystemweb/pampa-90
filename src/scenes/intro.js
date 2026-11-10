@@ -1,8 +1,9 @@
-// Intro cutscene (~25 s, skippable): four panels with typewriter captions.
+// Intro cutscene (~32 s, skippable): five panels with typewriter captions.
 //   1. a plane crosses the pampas at sunset
-//   2. it lands on a dirt strip
-//   3. a tiny airport: hut, windsock, one rusty truck
-//   4. the player steps out with a duffel bag: "Welcome to La Pampa... nothing but sky"
+//   2. it lands on the asphalt runway of Santa Rosa airport
+//   3. a modest terminal (hut + windsock), nearly a thousand people waiting on the tarmac
+//   4. the player steps out with a duffel bag and sees the crowd: "This is my people!"
+//   5. the farm of El Marito near Macachín: "Welcome to La Pampa... nothing but sky"
 //
 // Space / A / tap: finish the caption, then go to the next panel.
 // B / X / tap SKIP: jump straight to the first level.
@@ -34,13 +35,28 @@ const SKY_EVENING = [PAL.skyDeep, PAL.duskDeep, PAL.dusk, PAL.yellow];
 const SKY_SUNSET = [PAL.duskDeep, PAL.dusk, PAL.yellow];
 
 // ---------------------------------------------------------------- shared scenery
-function ground(c, horizon, { strip = null, dark = false } = {}) {
+// strip surfaces: [edge, body]. Asphalt runway gets white centre marks; dirt track gets none.
+const SURFACES = { asphalt: [PAL.ink, PAL.grey], dirt: [PAL.dirtDark, PAL.dirt] };
+
+function ground(c, horizon, { strip = null, surface = 'dirt', dark = false } = {}) {
   rect(c, dark ? PAL.grassDeep : PAL.grassDark, 0, horizon, W, PH - horizon);
   for (let n = 1; n < 7; n++) rect(c, dark ? PAL.treeDark : PAL.grassDeep, 0, horizon + Math.round(n * n * 1.2), W, n > 3 ? 2 : 1);
   if (strip) {
-    rect(c, PAL.dirtDark, 0, strip[0], W, strip[1] - strip[0]);
-    rect(c, PAL.dirt, 0, strip[0] + 1, W, strip[1] - strip[0] - 2);
-    for (let x = 6; x < W; x += 28) rect(c, PAL.white, x, (strip[0] + strip[1]) / 2, 12, 1); // faded runway marks
+    const [edge, body] = SURFACES[surface];
+    rect(c, edge, 0, strip[0], W, strip[1] - strip[0]);
+    rect(c, body, 0, strip[0] + 1, W, strip[1] - strip[0] - 2);
+    if (surface === 'asphalt') {
+      for (let x = 6; x < W; x += 28) rect(c, PAL.white, x, (strip[0] + strip[1]) / 2, 12, 1); // runway centre marks
+    }
+  }
+}
+
+// Small crowd of standing figures (existing character sprites), gently cheering when `cheer` > 0.
+function crowd(c, x0, y, pan, cheer = 0) {
+  const figs = [SPRITES.friend.idle, SPRITES.player.idle, SPRITES.playerJog.idle, SPRITES.playerTrack.idle];
+  for (let i = 0; i < 6; i++) {
+    const bob = i % 2 ? -cheer : 0;
+    drawSprite(c, figs[i % figs.length], x0 + i * 13 + pan, y + bob, { scale: 1 });
   }
 }
 
@@ -82,7 +98,7 @@ const PANELS = [
     },
   },
 
-  { // 2 - touchdown on the dirt strip
+  { // 2 - touchdown on the asphalt runway
     dur: 5.5,
     line: 'intro.2',
     setup(s) { s.puffs = []; s.landed = false; },
@@ -108,47 +124,47 @@ const PANELS = [
       const horizon = 82;
       skyBands(c, horizon, SKY_EVENING);
       setSun(c, 70, horizon, 12);
-      ground(c, horizon, { strip: [96, 112] });
+      ground(c, horizon, { strip: [96, 112], surface: 'asphalt' });
       trees(c, horizon, [40, 200, 250, 292]);
       for (const p of s.puffs) {
         const k = p.a / 1.2;
         const r = 2 + Math.round(k * 5);
         c.globalAlpha = 0.7 * (1 - k);
-        disc(c, PAL.dirt, p.x, p.y, r);
+        disc(c, PAL.silver, p.x, p.y, r); // tyre smoke
         c.globalAlpha = 1;
       }
       drawSprite(c, frameAt(SPRITES.intro.plane, s.pt, 20), s.planeX, s.planeY + 4, { scale: 1 });
     },
   },
 
-  { // 3 - the tiny airport
+  { // 3 - the modest terminal, the crowd already on the tarmac
     dur: 5.3,
     line: 'intro.3',
     draw(s, c, tt) {
       const horizon = 80;
       skyBands(c, horizon, SKY_SUNSET);
       setSun(c, 280, horizon, 10);
-      ground(c, horizon, { strip: [98, 112] });
+      ground(c, horizon, { strip: [98, 112], surface: 'asphalt' });
       const pan = -tt * 2.5; // slow camera drift
       trees(c, horizon, [20, 96 + pan * 0.3, 250 + pan * 0.3]);
       drawSprite(c, SPRITES.intro.hut, 98 + pan, 102);
       drawSprite(c, frameAt(SPRITES.intro.windsock, tt, 2), 168 + pan, 102);
-      drawSprite(c, SPRITES.intro.truck, 236 + pan, 108);
+      crowd(c, 186, 120, pan);
       drawSprite(c, SPRITES.intro.plane[0], 36 + pan, 114, { scale: 1 });
     },
   },
 
-  { // 4 - the player steps out
+  { // 4 - the player steps out and the crowd cheers
     dur: 8,
     line: 'intro.4',
     draw(s, c, tt) {
       const horizon = 80;
       skyBands(c, horizon, SKY_SUNSET);
       setSun(c, 238, horizon, 18);
-      ground(c, horizon, { strip: [94, 122] });
+      ground(c, horizon, { strip: [94, 122], surface: 'asphalt' });
       drawSprite(c, frameAt(SPRITES.intro.windsock, tt, 2), 292, 120, { scale: 1 });
       drawSprite(c, SPRITES.intro.plane[0], 62, 122, { scale: 2 }); // parked, door side
-      // walk from the plane door to the middle of the strip
+      // walk from the plane door to the middle of the runway
       const k = ease.inOutQuad(clamp((tt - 1.2) / 2.8));
       const x = 100 + k * 74;
       const walking = tt > 1.2 && tt < 4.0;
@@ -157,6 +173,24 @@ const PANELS = [
       drawSprite(c, player, x, 120 + bob, { scale: 2 });
       // duffel bag in hand
       drawSprite(c, SPRITES.intro.duffel, x + 16, 112 + bob, { scale: 1 });
+      // the crowd, cheering once he is out on the tarmac
+      const cheer = tt > 4.2 ? Math.abs(Math.sin((tt - 4.2) * 8)) * 2 : 0;
+      crowd(c, 186, 120, 0, cheer);
+    },
+  },
+
+  { // 5 - the farm near Macachín: silence, a single figure, nothing but sky
+    dur: 7.5,
+    line: 'intro.5',
+    draw(s, c, tt) {
+      const horizon = 84;
+      skyBands(c, horizon, SKY_SUNSET);
+      setSun(c, 96, horizon, 12);
+      ground(c, horizon, { strip: [108, 118] }); // dirt track to the house
+      trees(c, horizon, [30, 60, 280, 306]);
+      drawSprite(c, SPRITES.intro.hut, 214, 116);
+      drawSprite(c, SPRITES.player.idle, 128, 122, { scale: 2 });
+      drawSprite(c, SPRITES.intro.duffel, 144, 114, { scale: 1 });
     },
   },
 ];

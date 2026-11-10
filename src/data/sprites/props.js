@@ -245,24 +245,6 @@ const hut = () => {
   return g;
 };
 
-const truck = () => {
-  const g = new Grid(48, 26);
-  g.rect(3, 12, 26, 9, 'u'); // bed
-  g.rect(3, 10, 26, 2, 'U');
-  g.rect(3, 10, 2, 11, 'U'); g.rect(27, 10, 2, 11, 'U');
-  g.rect(29, 6, 14, 15, 'u'); // cab
-  g.rect(37, 6, 6, 4, 'u');
-  g.rect(31, 8, 10, 7, 'c'); // window
-  g.rect(31, 8, 10, 1, 'w');
-  g.rect(35, 8, 1, 7, 'U');
-  g.rect(43, 14, 4, 7, 'U'); // hood/bumper
-  g.rect(45, 15, 2, 2, 'y'); // headlight
-  g.rect(2, 21, 46, 2, 'g'); // chassis
-  for (const [x, y, w, h] of [[8, 14, 4, 3], [18, 17, 5, 2], [33, 17, 3, 3], [22, 12, 3, 2]]) g.rect(x, y, w, h, 'U'); // rust
-  for (const x of [10, 36]) { g.ellipse(x, 22, 4, 4, 'k'); g.ellipse(x, 22, 1.5, 1.5, 'W'); }
-  return g;
-};
-
 const plane = (frame) => {
   const g = new Grid(36, 16);
   g.rect(4, 6, 24, 6, 'w'); // fuselage
@@ -385,7 +367,6 @@ export const props = {
     cloud: sprite(cloud(), { outline: false }),
     windsock: [0, 1].map((f) => sprite(windsock(f), { anchor: [2, 40] })),
     hut: sprite(hut(), { anchor: [26, 36] }),
-    truck: sprite(truck(), { anchor: [24, 26] }),
     duffel: sprite(duffel(), { anchor: [10, 12] }),
   },
   clinic: {
