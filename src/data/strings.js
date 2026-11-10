@@ -82,6 +82,28 @@ export const STRINGS = {
     'l4.perfect': 'All perfect!',
     'l4.bpm': 'BPM {n}',
     'l4.distract': 'Stay calm...',
+    'l4.phone': 'Brrring!',
+    'l4.calm': 'CALM {n}%',
+    'l4.in': 'BREATHE IN',
+    'l4.out': 'BREATHE OUT',
+    'l4.hold': 'Hold A to breathe in',
+
+    // ---- minigame HUD and results
+    'ui.time': 'TIME {n}',
+    'l1.cover': 'CLEAN {n}%',
+    'l1.clog': 'CLOGGED! B = DIP',
+    'l1.rinseHint': 'Hold A, let go in the green!',
+    'l1.again': 'Again!',
+    'l2.stamina': 'STAMINA {n}%',
+    'l3.score': 'GOALS {n} / {need}',
+    'res.fail': 'TRY AGAIN',
+    'res.fail.hint': 'No problem, one more try!',
+
+    // ---- pause menu
+    'ui.resumeBtn': 'RESUME',
+    'ui.flash': 'REDUCED FLASH',
+    'ui.on': 'ON',
+    'ui.off': 'OFF',
 
     // ---- results / ending
     'res.title': 'LEVEL CLEAR',
@@ -167,6 +189,26 @@ export const STRINGS = {
     'l4.perfect': '¡Todo perfecto!',
     'l4.bpm': 'PPM {n}',
     'l4.distract': 'Calma...',
+    'l4.phone': '¡Brrring!',
+    'l4.calm': 'CALMA {n}%',
+    'l4.in': 'INHALA',
+    'l4.out': 'EXHALA',
+    'l4.hold': 'Mantené A para inhalar',
+
+    'ui.time': 'TIEMPO {n}',
+    'l1.cover': 'LIMPIO {n}%',
+    'l1.clog': 'TAPADA! B = MOJAR',
+    'l1.rinseHint': 'Mantené A, soltá en el verde!',
+    'l1.again': '¡Otra vez!',
+    'l2.stamina': 'RESISTENCIA {n}%',
+    'l3.score': 'GOLES {n} / {need}',
+    'res.fail': 'OTRA VEZ',
+    'res.fail.hint': 'Dale, una más!',
+
+    'ui.resumeBtn': 'SEGUIR',
+    'ui.flash': 'MENOS DESTELLOS',
+    'ui.on': 'SI',
+    'ui.off': 'NO',
 
     'res.title': 'NIVEL SUPERADO',
     'res.stars': 'ESTRELLAS',
