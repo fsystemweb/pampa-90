@@ -5,7 +5,7 @@
 
 ## 1. Brief (level info files)
 
-**Premise.** You are the best soccer player in the world, mid-1990s. You wear colourful 90s sportswear. Before the new season you go to a special preseason in La Pampa, Argentina: countryside, middle of nowhere. You land at a tiny airport (intro sequence).
+**Premise.** You are the best soccer player in the world, mid-1990s. You wear colourful 90s sportswear. Before the new season you go to a special preseason in La Pampa, Argentina: countryside, middle of nowhere. You land at a small provincial airport (Santa Rosa, asphalt runway, modest terminal) where a crowd is waiting; then you are taken to a remote farm (intro sequence).
 
 **Structure.** Intro + 4 short, easy, fun minigames, then a season-start ending.
 
@@ -70,7 +70,7 @@ Note: screenshots contain broadcaster logos and a real person → **do not ship 
 ## 4. Game flow
 
 1. **Title screen** — logo, blinking "PRESS START / TAP", mute + fullscreen icons.
-2. **Intro cutscene (~25 s, skippable)** — 4 panels: plane flies over pampas at sunset → lands on dirt strip → tiny airport (a hut + windsock + one rusty truck) → player steps out with duffel bag, 90s tracksuit, a *"Welcome to La Pampa… nothing but sky"* line. Typewriter text, chiptune theme.
+2. **Intro cutscene (~32 s, skippable)** — 5 panels: plane flies over pampas at sunset → lands on the asphalt runway of Santa Rosa airport → modest terminal, nearly a thousand people waiting on the tarmac → player steps out with duffel bag, 90s tracksuit, "This is my people!" → quiet farm near Macachín with a "Welcome to La Pampa… nothing but sky" line. Typewriter text, chiptune theme.
 3. **Level select-less linear flow**: L1 → L2 → L3 → L4, each with a 3-line "briefing" card (icon + controls) before starting. Progress bar of "Preseason readiness" between levels.
 4. **Ending** — doctor gives thumbs-up, stadium-flash pixel scene, stars summary, "SEASON START" + replay.
 
