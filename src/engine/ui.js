@@ -36,6 +36,9 @@ export function drawHearts(ctx, x, y, n, max = 3, gap = 2) {
   return max * 7 + (max - 1) * gap;
 }
 
+/** Pixel width of a row of `max` stars drawn with drawStars. */
+export const starsWidth = (max = 3, { gap = 2, scale = 1 } = {}) => max * 7 * scale + (max - 1) * gap;
+
 /** Row of stars; `n` of `max` are filled. */
 export function drawStars(ctx, x, y, n, max = 3, { gap = 2, scale = 1 } = {}) {
   for (let i = 0; i < max; i++) {

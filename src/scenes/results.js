@@ -11,7 +11,7 @@ import { drawText, measure } from '../engine/font.js';
 import { scenes } from '../engine/scene.js';
 import { playSfx } from '../engine/audio.js';
 import { music } from '../engine/music.js';
-import { panel, drawStars, drawPromptText, promptLabel } from '../engine/ui.js';
+import { panel, drawStars, starsWidth, drawPromptText, promptLabel } from '../engine/ui.js';
 import { rect } from '../engine/draw.js';
 import { after } from '../engine/tween.js';
 import { nextAfter, LEVELS } from '../data/levels.js';
@@ -80,8 +80,8 @@ export class ResultsScene {
     drawText(c, t(this.def.name), W / 2, 42, { align: 'center', color: PAL.white, shadow: PAL.black });
 
     // stars (filled one by one) and the total
-    const sw = 3 * 7 + 2 * 4;
-    drawStars(c, Math.round(W / 2 - sw / 2), 58, this.shownStars, 3, { gap: 4, scale: 2 });
+    const opts = { gap: 4, scale: 2 };
+    drawStars(c, Math.round(W / 2 - starsWidth(3, opts) / 2), 58, this.shownStars, 3, opts);
     drawText(c, t('res.stars'), W / 2, 84, { align: 'center', color: PAL.silver });
 
     // this run and the best so far
