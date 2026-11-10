@@ -135,7 +135,7 @@ html, body {
 #fs-btn, #mute-btn {
   position: fixed;
   top: max(8px, env(safe-area-inset-top));
-  left: max(8px, env(safe-area-inset-left));
+  left: calc(50% - 40px); /* top-centre: the corners hold the in-game HUD */
   z-index: 6;
   width: 36px;
   height: 32px;
@@ -147,6 +147,6 @@ html, body {
   cursor: pointer;
 }
 #fs-btn[hidden] { display: none; }
-#mute-btn { left: calc(max(8px, env(safe-area-inset-left)) + 44px); }
+#mute-btn { left: calc(50% + 4px); }
 #mute-btn.off { text-decoration: line-through; opacity: 0.6; }
 #fs-btn:focus-visible, #mute-btn:focus-visible { outline: 2px solid #f7d31f; }
