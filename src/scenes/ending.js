@@ -1,5 +1,5 @@
 // Ending (M8): the doctor gives a thumbs-up, the stadium lights flash, the stars
-// summary is shown, then SEASON START (primary) or PLAY AGAIN (secondary).
+// summary is shown, then TO THE WORLD CUP (primary) or PLAY AGAIN (secondary).
 // params: none (the total comes from the save file).
 
 import { W, H } from '../data/config.js';

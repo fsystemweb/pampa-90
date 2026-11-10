@@ -5,9 +5,9 @@
 
 ## 1. Brief (level info files)
 
-**Premise.** You are the best soccer player in the world, mid-1990s. You wear colourful 90s sportswear. Before the new season you go to a special preseason in La Pampa, Argentina: countryside, middle of nowhere. You land at a small provincial airport (Santa Rosa, asphalt runway, modest terminal) where a crowd is waiting; then you are taken to a remote farm (intro sequence).
+**Premise.** You are the best soccer player in the world, mid-1990s. You wear colourful 90s sportswear. To prepare for the next World Cup you go to isolate and work hard in La Pampa, Argentina: countryside, middle of nowhere. You land at a small provincial airport (Santa Rosa, asphalt runway, modest terminal) where a crowd is waiting; then you are taken to a remote farm (intro sequence).
 
-**Structure.** Intro + 4 short, easy, fun minigames, then a season-start ending.
+**Structure.** Intro + 4 short, easy, fun minigames, then a World Cup-ready ending.
 
 **Platform.** Web, 8-bit style, polished details. Desktop: keyboard. Mobile: landscape only (show "rotate your phone" overlay in portrait).
 
@@ -16,7 +16,7 @@
 | 1 | Shaving | Outdoors, you shave by hand using a razor and an improvised mirror hung on a post/fence. Cover/clear your whole face with the razor. Finish by rinsing your face with water from a bucket. |
 | 2 | Resistance | Jog through the pampas countryside to build stamina. From time to time a cow appears on the path and you must dodge it. |
 | 3 | Targeting | A friend crosses the ball in. Time a jump when the ball arrives and hit it with a scissor-kick (legs-crossed volley). The ball must score past a friend-goalkeeper. The goal is two fence posts/sticks in a field. |
-| 4 | Doctor check | Final level. Lying on the grass, doctor sits beside you with a portable blood-pressure/heart machine. Relax and breathe steadily until the reading goes green. Pass = ready for the season. |
+| 4 | Doctor check | Final level. Lying on the grass, doctor sits beside you with a portable blood-pressure/heart machine. Relax and breathe steadily until the reading goes green. Pass = ready for the World Cup. |
 
 **Clarifications** (I assumed the defaults in bold):
 1. Language: **English UI, Argentine-flavoured flavour text (a few "che", "dale")**; Also ES toggle
@@ -72,7 +72,7 @@ Note: screenshots contain broadcaster logos and a real person → **do not ship 
 1. **Title screen** — logo, blinking "PRESS START / TAP", mute + fullscreen icons.
 2. **Intro cutscene (~32 s, skippable)** — 5 panels: plane flies over pampas at sunset → lands on the asphalt runway of Santa Rosa airport → modest terminal, nearly a thousand people waiting on the tarmac → player steps out with duffel bag, 90s tracksuit, "This is my people!" → quiet farm near Macachín with a "Welcome to La Pampa… nothing but sky" line. Typewriter text, chiptune theme.
 3. **Level select-less linear flow**: L1 → L2 → L3 → L4, each with a 3-line "briefing" card (icon + controls) before starting. Progress bar of "Preseason readiness" between levels.
-4. **Ending** — doctor gives thumbs-up, stadium-flash pixel scene, stars summary, "SEASON START" + replay.
+4. **Ending** — doctor gives thumbs-up, stadium-flash pixel scene, stars summary, "TO THE WORLD CUP" + replay.
 
 ---
 
