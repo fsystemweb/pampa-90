@@ -32,7 +32,7 @@
 | Folder | Visual takeaways to translate into pixel art |
 |---|---|
 | Level 1 | Ornate gold wavy-frame mirror on a wooden post; green trees backdrop; white T-shirt; white foam on jaw/cheek; pink/plastic bucket; water splash arc. |
-| Level 2 | Low-angle horizon: pale blue sky, dirt path, tall grass edges, lone dark-green trees; runners in teal/blue 90s windbreakers. Cow not in image → we design it (Holstein black/white). |
+| Level 2 | Low-angle horizon: pale blue sky, dirt path, tall grass edges, lone dark-green trees; runners in teal/blue 90s windbreakers. Cow not in image → we design it (brown-and-white Argentine cow). |
 | Level 3 | Third-person from behind the player; wire fences with wooden posts converging to goal; flat yellow-green field, tree clumps on horizon; white tee + blue shorts; keeper in teal/green top diving. |
 | Level 4 | Lying on grass beside a house wall; doctor in white sweatshirt + navy shorts; arm cuff + small box monitor with cable; blue tracksuit pants. |
 
@@ -89,7 +89,7 @@ Note: screenshots contain broadcaster logos and a real person → **do not ship 
 
 ### L2 — Resistance (endless-runner, lane dodge)
 - **View:** side-scrolling parallax (sky, far trees, fence line, dirt road, grass tufts); player runs in a blue 90s windbreaker; teammate pace-runner in teal behind/ahead as visual companion.
-- **Controls:** `Space/Up/tap` = hop (or sidestep); alternately 2 lanes with `Up/Down`. Cows (Holstein pixel art) walk across path; occasional mud puddle / molehill tertiary obstacle, later a dog/hen for variety.
+- **Controls:** `Space/Up/tap` = hop (or sidestep); alternately 2 lanes with `Up/Down`. Cows (brown-and-white pixel art) walk across path; occasional mud puddle / molehill tertiary obstacle, later a dog/hen for variety.
 - **Stamina meter:** fills as you run clean; every hit slows you and drains stamina. Reach 100 % (~75 s) to finish. Speed ramps up gradually; "MOO!" speech bubble + warning "!" 1 s before a cow enters.
 - **Polish:** footstep dust, breath puffs, day-time sky gradient shifting, bobbing camera, cow SFX.
 
