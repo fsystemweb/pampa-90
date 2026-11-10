@@ -221,6 +221,47 @@ function windsock(frame) {
   return g;
 }
 
+
+// A group of locals waiting behind a wooden airport fence (two staggered rows, ~16 people).
+// Frame 1 raises arms / waves the flags so the group can cheer.
+const GROUP_W = 132, GROUP_H = 34;
+function waitingGroup(frame) {
+  const g = new Grid(GROUP_W, GROUP_H);
+  const shirts = ['r', 'b', 'w', 'c', 'y', 't', 'p', 'l', 'u', 'w', 'B', 'r', 'y', 'c', 'b', 'p'];
+  const hairs = ['k', 'N', 'n', 'y', 'G', 'k', 'U', 'N'];
+  const person = (x, y, i, back) => { // x = left, y = top of head; 7 wide, ~21 tall
+    const shirt = shirts[i % shirts.length];
+    const hair = hairs[(i * 5) % hairs.length];
+    const skin = i % 3 === 0 ? 'S' : 's';
+    const up = frame === 1 && i % 2 === 0;
+    g.rect(x + 1, y, 5, 5, skin); // head
+    g.rect(x + 1, y, 5, 2, hair);
+    if (i % 4 === 1) g.rect(x, y - 1, 7, 1, 'w'), g.rect(x + 1, y - 2, 5, 1, 'w'); // sun hat
+    g.rect(x, y + 5, 7, 9, shirt); // torso
+    if (up) { g.rect(x - 1, y + 1, 1, 6, skin); g.rect(x + 7, y + 2, 1, 5, skin); }
+    else { g.rect(x - 1, y + 6, 1, 6, shirt); g.rect(x + 7, y + 6, 1, 6, shirt); }
+    g.rect(x + 1, y + 14, 5, 6, i % 2 ? 'B' : 'k'); // trousers
+    return back;
+  };
+  for (let i = 0; i < 8; i++) person(4 + i * 16, 1, i * 2 + 1, true); // back row
+  for (let i = 0; i < 8; i++) person(12 + i * 16 - (i % 2 ? 2 : 0), 7, i * 2, false); // front row
+  // flags on poles held by the back row
+  for (const fx of [20, 84]) {
+    g.rect(fx, 0, 1, 12, 'N');
+    const w = frame ? 1 : 0;
+    g.rect(fx + 1, w, 9, 2, 'c');
+    g.rect(fx + 1, 2 + w, 9, 2, 'w');
+    g.rect(fx + 1, 4 + w, 9, 2, 'c');
+  }
+  // wooden fence in front: posts + two rails
+  for (let x = 0; x < GROUP_W; x += 12) g.rect(x, 20, 2, 14, 'N');
+  g.rect(0, 23, GROUP_W, 2, 'n');
+  g.rect(0, 29, GROUP_W, 2, 'n');
+  g.rect(0, 25, GROUP_W, 1, 'N');
+  g.rect(0, 31, GROUP_W, 1, 'N');
+  return g;
+}
+
 const hut = () => {
   const g = new Grid(52, 36);
   g.rect(3, 12, 46, 24, 'z'); // plastered wall
@@ -366,6 +407,7 @@ export const props = {
     plane: [0, 1].map((f) => sprite(plane(f))),
     cloud: sprite(cloud(), { outline: false }),
     windsock: [0, 1].map((f) => sprite(windsock(f), { anchor: [2, 40] })),
+    crowd: [0, 1].map((f) => sprite(waitingGroup(f), { anchor: [0, GROUP_H] })),
     hut: sprite(hut(), { anchor: [26, 36] }),
     duffel: sprite(duffel(), { anchor: [10, 12] }),
   },

@@ -38,7 +38,7 @@ export const STRINGS = {
     // ---- intro
     'intro.1': 'Mid-1990s. The best player in the world is flying somewhere... over the middle of Argentina.',
     'intro.2': 'The plane lands on the asphalt runway at Santa Rosa airport.',
-    'intro.3': 'A modest terminal. Nearly a thousand people wait on the tarmac.',
+    'intro.3': 'A modest terminal. A group of locals waits behind the fence.',
     'intro.4': 'He steps out and sees the crowd: "This is my people!"',
     'intro.5': 'Then, silence: the El Marito farm, near Macachín. Welcome to La Pampa... nothing but sky.',
 
@@ -125,7 +125,7 @@ export const STRINGS = {
 
     'intro.1': 'Mediados de los 90. El mejor jugador del mundo vuela sobre el medio de la Argentina.',
     'intro.2': 'El avión aterriza en la pista de asfalto del aeropuerto de Santa Rosa.',
-    'intro.3': 'Una terminal modesta. Casi mil personas lo esperan en la pista.',
+    'intro.3': 'Una terminal modesta. Un grupo de vecinos espera detrás del alambrado.',
     'intro.4': 'Al bajar ve a la multitud: "¡Esta es mi gente!"',
     'intro.5': 'Después, el silencio: la estancia El Marito, cerca de Macachín. Bienvenido a La Pampa... solo cielo.',
 
