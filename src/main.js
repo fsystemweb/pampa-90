@@ -4,6 +4,7 @@ import { W, H, STEP } from './data/config.js';
 import { input, createTouchControls, bindCanvas } from './engine/input.js';
 import { scenes } from './engine/scene.js';
 import { initDisplay } from './engine/display.js';
+import { openPauseMenu, updatePauseMenu, drawPauseMenu } from './engine/pause.js';
 import { initAudio, toggleMute } from './engine/audio.js';
 import { applyDom, toggleLang } from './data/strings.js';
 import './scenes/index.js'; // registers every scene
@@ -41,6 +42,7 @@ export function setPause(reason, on = true) {
   const was = isPaused();
   if (on) pauseReasons.add(reason);
   else pauseReasons.delete(reason);
+  if (on && reason === 'user') openPauseMenu(() => setPause('user', false));
   if (was !== isPaused()) last = performance.now(); // avoid a huge dt on resume
 }
 export const isPaused = () => pauseReasons.size > 0;
@@ -76,11 +78,15 @@ function frame(now) {
   last = now;
   if (isPaused()) {
     acc = 0;
-    // keep polling so the user can un-pause
-    if (pauseReasons.size === 1 && pauseReasons.has('user')) {
+    // keep polling so the user can un-pause; the menu runs only for a user pause
+    const userOnly = pauseReasons.size === 1 && pauseReasons.has('user');
+    if (userOnly) {
       input.update();
       handleGlobalActions();
+      if (isPaused()) updatePauseMenu();
     }
+    hooks.draw(ctx); // the frozen frame, under the menu
+    if (isPaused() && userOnly) drawPauseMenu(ctx);
     return;
   }
   acc += elapsed;
@@ -99,5 +105,8 @@ const hash = new URLSearchParams(location.hash.slice(1));
 const startParams = {};
 for (const [k, v] of hash) if (k !== 'scene') startParams[k] = Number.isNaN(Number(v)) ? v : Number(v);
 scenes.go(hash.get('scene') || 'title', startParams);
+
+// dev hook for manual testing in the browser console: window.pampa.scenes.current
+window.pampa = { scenes };
 
 requestAnimationFrame(frame);

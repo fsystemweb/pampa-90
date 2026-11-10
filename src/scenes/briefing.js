@@ -9,6 +9,8 @@ import { input } from '../engine/input.js';
 import { drawText, measure } from '../engine/font.js';
 import { scenes } from '../engine/scene.js';
 import { playSfx } from '../engine/audio.js';
+import { music } from '../engine/music.js';
+import { TRACKS } from '../data/tracks.js';
 import { tween, after, clamp } from '../engine/tween.js';
 import { drawSprite, frameAt } from '../engine/sprites.js';
 import { panel, drawBar, promptLabel, drawPromptText } from '../engine/ui.js';
@@ -77,6 +79,7 @@ export class BriefingScene {
       });
     }
     playSfx('select');
+    music.play(TRACKS.title); // calm loop between minigames
 
     // dev: #scene=briefing&level=2&t=5 jumps ahead in time (for screenshots)
     if (params.t > 0) {
