@@ -124,6 +124,17 @@ export const STRINGS = {
     'end.start': 'TO THE WORLD CUP',
     'end.total': 'TOTAL STARS: {n} / {max}',
     'end.replay': 'PLAY AGAIN',
+    'end.share': 'SHARE SCORE',
+
+    // ---- score card / share
+    'card.title': 'PRESEASON REPORT',
+    'card.total': 'TOTAL STARS {n} / {max}',
+    'card.play': 'PLAY:',
+    'card.text': "I finished my preseason in PAMPA '90 with {n}/{max} stars {stars} Can you beat it?",
+    'share.shared': 'SHARED!',
+    'share.saved': 'CARD SAVED, LINK COPIED',
+    'share.copied': 'LINK COPIED',
+    'share.failed': 'COULD NOT SHARE',
   },
 
   es: {
@@ -237,6 +248,17 @@ export const STRINGS = {
     'end.start': 'RUMBO AL MUNDIAL',
     'end.total': 'ESTRELLAS: {n} / {max}',
     'end.replay': 'JUGAR OTRA VEZ',
+    'end.share': 'COMPARTIR',
+
+    // ---- tarjeta / compartir
+    'card.title': 'INFORME DE PRETEMPORADA',
+    'card.total': 'ESTRELLAS {n} / {max}',
+    'card.play': 'JUGA:',
+    'card.text': 'Terminé mi pretemporada en PAMPA \'90 con {n}/{max} estrellas {stars} ¿Me superás?',
+    'share.shared': '¡COMPARTIDO!',
+    'share.saved': 'TARJETA GUARDADA, LINK COPIADO',
+    'share.copied': 'LINK COPIADO',
+    'share.failed': 'NO SE PUDO COMPARTIR',
   },
 };
 
@@ -280,6 +302,7 @@ export function t(key, params) {
 
 /** Fill DOM elements marked with data-i18n="key" (used by the rotate overlay). */
 export function applyDom() {
+  document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     el.textContent = t(el.dataset.i18n);
   });

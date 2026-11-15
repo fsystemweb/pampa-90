@@ -42,7 +42,9 @@ function enter(scene, params) {
 
 function make(name) {
   const factory = registry.get(name);
-  return factory ? factory() : stubScene(name);
+  const scene = factory ? factory() : stubScene(name);
+  scene.sceneName = name; // read by tests and the console (window.pampa.scenes.name)
+  return scene;
 }
 
 function stubScene(name) {
@@ -70,6 +72,10 @@ export const scenes = {
   /** The active (top) scene, or undefined. */
   get current() {
     return stack[stack.length - 1];
+  },
+  /** Registered name of the active scene ('title', 'level2', ...). */
+  get name() {
+    return stack[stack.length - 1]?.sceneName;
   },
   get stackSize() {
     return stack.length;

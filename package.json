@@ -1,0 +1,18 @@
+{
+  "name": "pampa-90",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Pampa '90 - 8-bit browser minigames. Dev tooling only: the game itself is static (index.html + src/) with no build step.",
+  "type": "module",
+  "scripts": {
+    "serve": "python3 -m http.server 8000",
+    "smoke": "node tests/smoke.mjs",
+    "smoke:all": "node tests/smoke.mjs --browsers chromium,firefox,webkit",
+    "shots": "node tests/shot.mjs",
+    "record": "node tests/record.mjs",
+    "test": "node tests/smoke.mjs --browsers chromium,firefox,webkit"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}
