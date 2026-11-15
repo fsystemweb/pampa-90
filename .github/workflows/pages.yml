@@ -1,5 +1,5 @@
 # Publishes the static game to GitHub Pages on every push to main.
-# Only the playable files are uploaded: reference/ (screenshots, not shipped) and tools/ are left out.
+# Only the playable files are uploaded: reference/, tools/, tests/ and screenshots/ are left out.
 name: Deploy to GitHub Pages
 
 on:

@@ -5,8 +5,8 @@ import { input, createTouchControls, bindCanvas } from './engine/input.js';
 import { scenes } from './engine/scene.js';
 import { initDisplay } from './engine/display.js';
 import { openPauseMenu, updatePauseMenu, drawPauseMenu } from './engine/pause.js';
-import { initAudio, toggleMute } from './engine/audio.js';
-import { applyDom, toggleLang } from './data/strings.js';
+import { initAudio, toggleMute, getAudio, isMuted } from './engine/audio.js';
+import { applyDom, toggleLang, getLang } from './data/strings.js';
 import './scenes/index.js'; // registers every scene
 
 export { W, H, STEP };
@@ -106,7 +106,19 @@ const startParams = {};
 for (const [k, v] of hash) if (k !== 'scene') startParams[k] = Number.isNaN(Number(v)) ? v : Number(v);
 scenes.go(hash.get('scene') || 'title', startParams);
 
-// dev hook for manual testing in the browser console: window.pampa.scenes.current
-window.pampa = { scenes };
+// dev hook for manual testing in the browser console and the Playwright tests (tests/):
+//   window.pampa.scenes.current / .name, window.pampa.info()
+window.pampa = {
+  scenes,
+  info: () => ({
+    scene: scenes.name,
+    busy: scenes.busy,
+    paused: [...pauseReasons],
+    audio: getAudio()?.ctx.state ?? 'none',
+    muted: isMuted(),
+    lang: getLang(),
+    canvas: { w: canvas.clientWidth, h: canvas.clientHeight },
+  }),
+};
 
 requestAnimationFrame(frame);
