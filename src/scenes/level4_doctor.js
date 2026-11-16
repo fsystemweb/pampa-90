@@ -71,11 +71,11 @@ export class Level4Scene {
     this.t += dt;
     this.noiseT = Math.max(0, this.noiseT - dt);
     this.cloudX += dt * 3;
+    // the dialog keeps typing after the win too, so the doctor's last line shows
+    // (primary / tap complete a line)
+    if (!scenes.busy) this.dialog.update(dt);
     if (this.done || scenes.busy) return;
     if (!this.juice.tick(dt)) return;
-
-    // the dialog advances on its own (primary / tap complete a line)
-    this.dialog.update(dt);
 
     // breathing: hold to fill the lungs, release to empty them
     if (input.down('primary')) this.breath = Math.min(1, this.breath + dt / BREATH_RATE);
@@ -147,6 +147,9 @@ export class Level4Scene {
     this.won = true;
     music.stop(0.6);
     playSfx('win');
+    // replace whatever the doctor was saying with the verdict, never an empty box
+    this.dialog.queue = [];
+    this.dialog.line = null;
     this.dialog.say(t('l4.perfect'));
     const stars = this.resets === 0 ? 3 : this.resets === 1 ? 2 : 1;
     after(3.2, () => {
