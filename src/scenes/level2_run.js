@@ -3,6 +3,8 @@
 // switch between the two lanes with up (far) / down (near). Cows cross the path:
 // a "!" and a MOO bubble warn one second before they arrive. Clean running fills
 // the stamina bar; every hit drains it and makes you stumble. Full bar = finish.
+// The fuller the bar, the faster the run and the more obstacles (#94): the
+// difficulty follows the bar both ways, so a hit also eases it a little.
 
 import { W, H } from '../data/config.js';
 import { PAL } from '../data/palette.js';
@@ -24,10 +26,14 @@ const HORIZON = 72;
 const LANE_Y = [124, 152]; // far, near (feet line)
 const PX = 74; // player's x (feet)
 const GOAL = 100; // stamina to finish
-const RUN_TIME = 75; // seconds of clean running to finish
+const RUN_TIME = 45; // seconds of clean running to finish
 const GAIN = GOAL / RUN_TIME; // stamina per second
 const HOP_V = 190; // hop launch speed (px/s)
 const GRAV = 560;
+// difficulty at an empty bar -> at a full bar
+const SPEED = [64, 140]; // scroll speed (px/s)
+const SPAWN = [2.1, 0.95]; // base gap between obstacles (s), plus up to SPAWN_JITTER
+const SPAWN_JITTER = 0.8;
 
 // fixed parallax layers for the scenery
 const TREES_FAR = Array.from({ length: 8 }, (_, i) => i * 70);
@@ -68,9 +74,12 @@ export class Level2Scene {
 
   get airborne() { return this.h > 0.5; }
 
-  /** Scroll speed in px/s (ramps up over the run). */
+  /** 0..1: how full the stamina bar is; drives the difficulty. */
+  get progress() { return Math.min(1, this.stamina / GOAL); }
+
+  /** Scroll speed in px/s (ramps up as the stamina bar fills). */
   get speed() {
-    const base = 68 + 52 * Math.min(1, this.elapsed / RUN_TIME);
+    const base = SPEED[0] + (SPEED[1] - SPEED[0]) * this.progress;
     const f = (this.stumble > 0 ? 0.35 : 1) * (this.slow > 0 ? 0.6 : 1);
     return base * f;
   }
@@ -115,11 +124,11 @@ export class Level2Scene {
       this.juice.emit(PAL.dirt, PX - 8, this.laneY - 1, 2, { speed: 14, life: 0.4, gravity: -10, up: 0.2 });
     }
 
-    // spawn: cows, molehills, puddles (gets busier as the run goes on)
+    // spawn: cows, molehills, puddles (gets busier as the stamina bar fills)
     this.nextSpawn -= dt;
     if (this.nextSpawn <= 0) {
       this.spawn();
-      this.nextSpawn = 2.2 - 0.9 * Math.min(1, this.elapsed / RUN_TIME) + Math.random() * 0.9;
+      this.nextSpawn = SPAWN[0] + (SPAWN[1] - SPAWN[0]) * this.progress + Math.random() * SPAWN_JITTER;
     }
 
     // move obstacles and resolve encounters
