@@ -22,21 +22,24 @@ import { t } from '../data/strings.js';
 import { tween, after, clamp, ease } from '../engine/tween.js';
 import { Juice } from '../engine/juice.js';
 
-const GW = 88; // glass canvas (the mirror's opening)
-const GH = 104;
-const GCX = 44;
-const GCY = 52;
+const GW = 112; // glass canvas = the mirror's rectangular, landscape opening
+const GH = 84; //   (matches mirrorFrame(112, 84) in data/sprites/props.js)
 const AT = { x: 160, y: 70 }; // mirror anchor = glass centre on screen
-const GO = { x: AT.x - GCX, y: AT.y - GCY }; // glass origin on screen
+const GO = { x: AT.x - GW / 2, y: AT.y - GH / 2 }; // glass origin on screen
+// The reflection (face, hair, neck) is painted in its own 88 x 104 "face" coordinates
+// and shifted into the glass: centred, top of the hair just under the frame.
+const FO = { x: (GW - 88) / 2, y: -12 }; // face origin inside the glass (the T-shirt sits just below)
+const FCX = 44; // face centre x, in face coordinates
+const FACE = { x: GO.x + FO.x, y: GO.y + FO.y }; // face origin on screen
 const CUP = { x: 42, y: 176 };
 const BUCKET_X = 280;
 const BUCKET_REST = 160;
 const BUCKET_HIDDEN = 200;
 const POUR_SIDE = { start: 0.25, flight: 0.4, total: 1.0 }; // bucket tips, water travels, bucket rights itself
 const POUR_FINAL = { start: 0.8, flight: 0.3, total: 2.2 }; // last splash: bucket goes over the head
-const HEAD_TOP = { x: GO.x + GCX, y: GO.y + 18 }; // where the water hits the hair
+const HEAD_TOP = { x: FACE.x + FCX, y: FACE.y + 18 }; // where the water hits the hair
 const FINAL_TILT = 1.9;
-const FINAL_PIVOT = { x: GO.x + GCX + 13, y: GO.y + 6 }; // bucket pivot when held over the head
+const FINAL_PIVOT = { x: FACE.x + FCX + 13, y: FACE.y + 6 }; // bucket pivot when held over the head
 const TILT_MAX = 1.2; // radians
 const LIFT = 34; // the bucket is raised while pouring
 
@@ -67,14 +70,15 @@ function buildAssets() {
   // reflected room: sky, trees, then the face, hair, neck and T-shirt
   const face = canvas(GW, GH);
   const f = face.getContext('2d');
-  rect(f, PAL.skyHi, 0, 0, GW, GH);
-  rect(f, PAL.sky, 0, 0, GW, 14);
-  for (let x = -6; x < GW + 6; x += 12) disc(f, PAL.tree, x, 12, 9);
-  rect(f, PAL.grassDark, 0, 88, GW, 16);
-  ellipsePx(f, PAL.skin, GCX, 50, 22, 28);
-  ellipsePx(f, PAL.skinDark, GCX + 19, 52, 3, 6); // ears
-  ellipsePx(f, PAL.skinDark, GCX - 19, 52, 3, 6);
-  ellipsePx(f, PAL.woodDark, GCX, 30, 24, 16); // hair
+  f.translate(FO.x, FO.y); // everything below is in face coordinates
+  rect(f, PAL.skyHi, -FO.x, -FO.y, GW, GH);
+  rect(f, PAL.sky, -FO.x, 0, GW, 14);
+  for (let x = -6 - FO.x; x < GW + 6; x += 12) disc(f, PAL.tree, x, 12, 9);
+  rect(f, PAL.grassDark, -FO.x, 88, GW, GH);
+  ellipsePx(f, PAL.skin, FCX, 50, 22, 28);
+  ellipsePx(f, PAL.skinDark, FCX + 19, 52, 3, 6); // ears
+  ellipsePx(f, PAL.skinDark, FCX - 19, 52, 3, 6);
+  ellipsePx(f, PAL.woodDark, FCX, 30, 24, 16); // hair
   rect(f, PAL.woodDark, 22, 34, 4, 14);
   rect(f, PAL.woodDark, 62, 34, 4, 14);
   rect(f, PAL.woodDark, 33, 44, 6, 1); // brows
@@ -88,14 +92,17 @@ function buildAssets() {
   rect(f, PAL.skinDark, 51, 74, 1, 30);
   rect(f, PAL.white, 12, 96, 64, 8); // T-shirt
   rect(f, PAL.silver, 36, 96, 16, 2); // collar
+  f.setTransform(1, 0, 0, 1, 0, 0);
 
-  // which pixels must end up clean: the lower face and the neck
+  // which pixels must end up clean: the lower face and the neck (tested in face coordinates)
   const target = new Uint8Array(GW * GH);
   let count = 0;
   for (let y = 0; y < GH; y++) {
     for (let x = 0; x < GW; x++) {
-      const onFace = inEllipse(x, y, GCX, 50, 23, 29) && y >= 51; // eyes are at y 47-48: keep them clear
-      const onNeck = x >= 35 && x < 53 && y >= 73 && y < 94;
+      const fx = x - FO.x;
+      const fy = y - FO.y;
+      const onFace = inEllipse(fx, fy, FCX, 50, 23, 29) && fy >= 51; // eyes are at y 47-48: keep them clear
+      const onNeck = fx >= 35 && fx < 53 && fy >= 73 && fy < 94;
       if (onFace || onNeck) {
         target[y * GW + x] = 1;
         count++;
@@ -113,12 +120,7 @@ function buildAssets() {
     }
   }
 
-  // round mirror opening: everything outside is hidden by the frame anyway
-  const mask = canvas(GW, GH);
-  const m = mask.getContext('2d');
-  ellipsePx(m, '#000', GCX, GCY, 40, 48);
-
-  A = { face, foamTpl, mask, target, targetCount: count };
+  A = { face, foamTpl, target, targetCount: count };
   return A;
 }
 
@@ -361,7 +363,7 @@ export class Level1Scene {
 
   /** Where the water ends up: on the face for a good splash, short on the grass for a miss. */
   pourTarget(good) {
-    return good ? { x: GO.x + GCX + 6, y: GO.y + 62 } : { x: 214, y: 152 };
+    return good ? { x: FACE.x + FCX + 6, y: FACE.y + 62 } : { x: 214, y: 152 };
   }
 
   /** Bucket tilt 0..1 over the pour (tips quickly, holds, rights itself). */
@@ -419,10 +421,7 @@ export class Level1Scene {
     const o = this.out.getContext('2d');
     o.clearRect(0, 0, GW, GH);
     o.drawImage(this.assets.face, 0, 0);
-    o.drawImage(this.foam, 0, 0);
-    o.globalCompositeOperation = 'destination-in';
-    o.drawImage(this.assets.mask, 0, 0);
-    o.globalCompositeOperation = 'source-over';
+    o.drawImage(this.foam, 0, 0); // the frame covers the glass edges, no mask needed
     c.drawImage(this.out, GO.x + jx, GO.y + jy);
   }
 
@@ -475,7 +474,7 @@ export class Level1Scene {
       if (this.pour.landed) {
         const run = clamp((t - start - flight) / 0.8, 0, 1);
         for (let i = -3; i <= 3; i++) {
-          const x = GO.x + GCX + i * 6;
+          const x = FACE.x + FCX + i * 6;
           const len = Math.round((68 - Math.abs(i) * 4) * run);
           for (let y = 0; y < len; y += 3) rect(c, (y / 3 + i + Math.floor(t * 14)) % 3 === 0 ? PAL.white : PAL.sky, x, top.y + 8 + y, 2, 3);
         }
@@ -537,7 +536,8 @@ export class Level1Scene {
       drawText(c, t('ui.time', { n: Math.ceil(this.timeLeft) }), W - 8, 8, { align: 'right', color: PAL.white, shadow: PAL.black });
       drawText(c, t('l1.cover', { n: Math.floor(this.coverage * 100) }), 8, 30, { color: PAL.white, shadow: PAL.black });
       drawBar(c, 8, 40, 80, 6, this.coverage / NEED, { fg: PAL.teal, segments: 0 });
-      drawText(c, `${Math.round(NEED * 100)}%`, 92, 40, { color: PAL.silver, shadow: PAL.black });
+      // goal above the right end of the bar (clear of the wider mirror frame)
+      drawText(c, `${Math.round(NEED * 100)}%`, 88, 30, { align: 'right', color: PAL.silver, shadow: PAL.black });
     } else if (this.phase === 'rinse') {
       // timing meter: green band in the middle is the good splash
       const x = 100;
