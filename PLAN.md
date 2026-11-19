@@ -90,7 +90,7 @@ Note: screenshots contain broadcaster logos and a real person → **do not ship 
 ### L2 — Resistance (endless-runner, lane dodge)
 - **View:** side-scrolling parallax (sky, far trees, fence line, dirt road, grass tufts); player runs in a blue 90s windbreaker; teammate pace-runner in teal behind/ahead as visual companion.
 - **Controls:** `Space/Up/tap` = hop (or sidestep); alternately 2 lanes with `Up/Down`. Cows (brown-and-white pixel art) walk across path; occasional mud puddle / molehill tertiary obstacle, later a dog/hen for variety.
-- **Stamina meter:** fills as you run clean; every hit slows you and drains stamina. Reach 100 % (~75 s) to finish. Speed ramps up gradually; "MOO!" speech bubble + warning "!" 1 s before a cow enters.
+- **Stamina meter:** fills as you run clean; every hit slows you and drains stamina. Reach 100 % (~45 s of clean running) to finish. Speed and obstacle frequency rise with the stamina bar (and ease back after a hit); "MOO!" speech bubble + warning "!" 1 s before a cow enters.
 - **Polish:** footstep dust, breath puffs, day-time sky gradient shifting, bobbing camera, cow SFX.
 
 ### L3 — Targeting (timing + aim; the signature move)
