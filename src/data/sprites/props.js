@@ -96,40 +96,70 @@ const bucketGrid = (water) => {
   return g;
 };
 
-/** Ornate gold mirror frame with a transparent glass opening. */
-function mirrorFrame(rx, ry) {
-  const w = rx * 2 + 12;
-  const h = ry * 2 + 16;
+// Mirror frame geometry: the glass opening is gw x gh; the frame body is FB px thick,
+// with FS px of scallops outside it and FT px of headroom for the finial on top.
+const FB = 6;
+const FS = 3;
+const FT = 5;
+
+/** Ornate gold mirror frame (rectangular, landscape) with a transparent glass opening. */
+function mirrorFrame(gw, gh) {
+  const m = FB + FS;
+  const w = gw + m * 2;
+  const h = gh + m * 2 + FT;
   const g = new Grid(w, h);
-  const cx = w / 2 - 0.5;
-  const cy = h / 2 + 3;
-  g.ellipse(cx, cy, rx + 3, ry + 3, 'G'); // frame body
-  const n = 36; // scalloped, wavy edge
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * Math.PI * 2;
-    const r = i % 2 ? 4.2 : 3;
-    g.ellipse(cx + Math.cos(a) * (rx + r), cy + Math.sin(a) * (ry + r), 2, 2, i % 2 ? 'y' : 'G');
+  const x0 = m; // glass opening, top-left
+  const y0 = m + FT;
+  const bx = x0 - FB; // frame body, top-left
+  const by = y0 - FB;
+  const bw = gw + FB * 2;
+  const bh = gh + FB * 2;
+  g.rect(bx, by, bw, bh, 'G'); // frame body
+  // scalloped, wavy edge: alternating bumps all the way round
+  const bump = (x, y, i) => g.ellipse(x, y, 2, 2, i % 2 ? 'y' : 'G');
+  let i = 0;
+  for (let x = bx + 2; x <= bx + bw - 3; x += 4, i++) {
+    const r = i % 2 ? 2.2 : 1;
+    bump(x, by - r, i);
+    bump(x, by + bh - 1 + r, i);
   }
-  g.ring(cx, cy, rx + 1.5, ry + 1.5, 'Y', 2); // engraving
-  g.ellipse(cx, cy, rx - 4, ry - 4, '.'); // glass opening
-  g.ring(cx, cy, rx - 3, ry - 3, 'Y', 2);
-  g.ring(cx, cy, rx - 4, ry - 4, 'y', 1);
+  i = 0;
+  for (let y = by + 2; y <= by + bh - 3; y += 4, i++) {
+    const r = i % 2 ? 2.2 : 1;
+    bump(bx - r, y, i);
+    bump(bx + bw - 1 + r, y, i);
+  }
+  // corner rosettes
+  for (const [cx, cy] of [[bx, by], [bx + bw - 1, by], [bx, by + bh - 1], [bx + bw - 1, by + bh - 1]]) {
+    g.ellipse(cx, cy, 3, 3, 'y');
+    g.set(cx, cy, 'Y');
+  }
+  // engraving line inside the body, then the bevel round the glass
+  const box = (x, y, bw2, bh2, c) => {
+    g.rect(x, y, bw2, 1, c); g.rect(x, y + bh2 - 1, bw2, 1, c);
+    g.rect(x, y, 1, bh2, c); g.rect(x + bw2 - 1, y, 1, bh2, c);
+  };
+  box(bx + 2, by + 2, bw - 4, bh - 4, 'Y');
+  g.rect(x0 - 2, y0 - 2, gw + 4, gh + 4, 'Y');
+  g.rect(x0 - 1, y0 - 1, gw + 2, gh + 2, 'y');
+  g.rect(x0, y0, gw, gh, '.'); // glass opening
   // top finial + hanging loop
+  const cx = w / 2 - 0.5;
   g.ellipse(cx, 3, 4, 3, 'y');
   g.ring(cx, 3, 3, 2, 'Y', 1);
-  // highlights
-  for (let i = 0; i < 6; i++) g.set(cx - rx * 0.7 + i, cy - ry * 0.55 - i * 0.6, 'w');
+  // highlights along the top-left of the frame
+  for (let k = 0; k < 8; k++) g.set(bx + 4 + k, by + 1, 'w');
+  for (let k = 0; k < 5; k++) g.set(bx + 1, by + 4 + k, 'w');
   return g;
 }
 
-/** Diagonal glass shine drawn over the reflection. */
-function glassShine(rx, ry) {
-  const g = new Grid(rx * 2, ry * 2);
-  const m = new Grid(rx * 2, ry * 2).ellipse(rx - 0.5, ry - 0.5, rx - 4, ry - 4, 'w');
-  for (const [off, th] of [[10, 3], [18, 1]]) {
-    for (let y = 0; y < ry * 2; y++) {
-      const x = Math.round(off + (ry * 2 - y) * 0.55);
-      for (let k = 0; k < th; k++) if (m.get(x + k, y) === 'w') g.set(x + k, y, 'w');
+/** Diagonal glass shine drawn over the reflection (fills the gw x gh rectangle). */
+function glassShine(gw, gh) {
+  const g = new Grid(gw, gh);
+  for (const [off, th] of [[14, 3], [24, 1]]) {
+    for (let y = 0; y < gh; y++) {
+      const x = Math.round(off + (gh - y) * 0.55);
+      for (let k = 0; k < th; k++) if (x + k >= 1 && x + k < gw - 1 && y >= 1 && y < gh - 1) g.set(x + k, y, 'w');
     }
   }
   return g;
@@ -388,8 +418,9 @@ export const props = {
     bucket: sprite(bucketGrid(false)),
     bucketWater: sprite(bucketGrid(true)),
     // both anchored on the centre of the glass so they stack at the same point
-    mirror: sprite(mirrorFrame(44, 52), { anchor: [50, 64] }),
-    mirrorShine: sprite(glassShine(44, 52), { outline: false, anchor: [44, 52] }),
+    // glass 112 x 84 (landscape); matches GW / GH in scenes/level1_shave.js
+    mirror: sprite(mirrorFrame(112, 84), { anchor: [FB + FS + 56 + 1, FB + FS + FT + 42 + 1] }),
+    mirrorShine: sprite(glassShine(112, 84), { outline: false, anchor: [56, 42] }),
     post: sprite(woodPost(120), { anchor: [5, 0] }),
   },
   run: {

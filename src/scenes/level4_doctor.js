@@ -3,7 +3,7 @@
 // hold primary to breathe in (the bar rises), release to breathe out. Staying
 // within the guide's band lowers the heart rate; mistiming raises it. Hold the
 // calm zone (heart rate <= 70) for 15 s in total to win. Bugs, cow moos and a
-// phone ring cause screen noise now and then. No hard fail: if the heart rate
+// phone ring distract you now and then (a sound and a caption). No hard fail: if the heart rate
 // stays high for too long, the doctor says "again, relax" and the meter resets.
 
 import { W, H } from '../data/config.js';
@@ -56,8 +56,8 @@ export class Level4Scene {
     this.won = false;
     this.done = false;
     this.nextDistract = 7 + Math.random() * 4;
-    this.noiseT = 0;
-    this.noiseKind = null;
+    this.distractT = 0;
+    this.distractKind = null;
     this.cloudX = 40;
     this.dialog = new Dialog({ x: 8, y: 40, w: W - 16, h: 26, speed: 40 });
     this.ecg = []; // scrolling ECG samples
@@ -69,13 +69,13 @@ export class Level4Scene {
 
   update(dt) {
     this.t += dt;
-    this.noiseT = Math.max(0, this.noiseT - dt);
+    this.distractT = Math.max(0, this.distractT - dt);
     this.cloudX += dt * 3;
+    // the dialog keeps typing after the win too, so the doctor's last line shows
+    // (primary / tap complete a line)
+    if (!scenes.busy) this.dialog.update(dt);
     if (this.done || scenes.busy) return;
     if (!this.juice.tick(dt)) return;
-
-    // the dialog advances on its own (primary / tap complete a line)
-    this.dialog.update(dt);
 
     // breathing: hold to fill the lungs, release to empty them
     if (input.down('primary')) this.breath = Math.min(1, this.breath + dt / BREATH_RATE);
@@ -135,8 +135,8 @@ export class Level4Scene {
   distract() {
     const kinds = [['l4.distract', 'blip'], ['l3.cow', 'moo'], ['l4.phone', 'ring']];
     const [key, sfx] = kinds[Math.floor(Math.random() * kinds.length)];
-    this.noiseKind = key;
-    this.noiseT = 1.2;
+    this.distractKind = key;
+    this.distractT = 1.2;
     playSfx(sfx, { vol: 0.8 });
     this.nextDistract = 8 + Math.random() * 4;
   }
@@ -147,6 +147,9 @@ export class Level4Scene {
     this.won = true;
     music.stop(0.6);
     playSfx('win');
+    // replace whatever the doctor was saying with the verdict, never an empty box
+    this.dialog.queue = [];
+    this.dialog.line = null;
     this.dialog.say(t('l4.perfect'));
     const stars = this.resets === 0 ? 3 : this.resets === 1 ? 2 : 1;
     after(3.2, () => {
@@ -202,7 +205,7 @@ export class Level4Scene {
     this.juice.draw(c);
     c.restore();
 
-    this.drawNoise(c);
+    this.drawDistraction(c);
     this.drawHud(c);
     this.dialog.draw(c);
   }
@@ -216,16 +219,10 @@ export class Level4Scene {
     this.ecg.forEach((v, i) => rect(c, col, x + i * 0.5, y + 8 + v, 1, 1));
   }
 
-  drawNoise(c) {
-    if (this.noiseT <= 0) return;
-    // a band of screen noise: short white lines, dimmer with reduced flash
-    const n = 26;
-    for (let i = 0; i < n; i++) {
-      const y = (i * 37 + Math.floor(this.t * 60) * 13) % H;
-      const w = 8 + ((i * 53) % 40);
-      rect(c, (i % 3) ? PAL.white : PAL.silver, (i * 71) % W, y, w, 1);
-    }
-    if (this.noiseKind) drawText(c, t(this.noiseKind), W / 2, 150, { align: 'center', color: PAL.yellow, shadow: PAL.black });
+  /** Caption for the current distraction (the sound plays in distract()). */
+  drawDistraction(c) {
+    if (this.distractT <= 0 || !this.distractKind) return;
+    drawText(c, t(this.distractKind), W / 2, 150, { align: 'center', color: PAL.yellow, shadow: PAL.black });
   }
 
   /** Colour + shape + word for what the guide wants and what you are doing. */

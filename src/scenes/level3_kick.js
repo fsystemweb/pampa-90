@@ -4,6 +4,8 @@
 //   perfect / good  -> scissor kick, then a moving reticle sweeps the goal; press again to lock the aim
 //   early / late   -> wild shot over the fence
 // The keeper dives to a random side after a reaction delay that depends on the strike.
+// The strike is a jump kick: the player rises, hangs in mid-air in the contact pose
+// with the foot on the ball for the whole aim, then follows through and lands (#95).
 // 5 shots, 3 goals to pass.
 
 import { W, H } from '../data/config.js';
@@ -33,6 +35,13 @@ const CROSS = { x: 46, y: 116 }; // where the crosser kicks from
 const PLAYER = { x: 160, y: 178 }; // feet, scale 2
 const KEEPER_X = 160;
 const DIVE = 34;
+const HOVER = 22; // the ball arrives (and hangs while aiming) this high above HIT
+// jump kick timeline (s) and height (px above the feet line, so the foot meets the ball)
+const KICK_H = 36;
+const KICK_RISE = 0.18; // wind-up while rising
+const KICK_MIN_TOP = 0.12; // shortest hang in the contact pose (mistimed strikes)
+const KICK_FOLLOW = 0.15; // follow-through, still in the air
+const KICK_FALL = 0.3; // back down to the ground
 
 const RING_WINDOW = 1.0; // seconds the ring takes to close
 const PERFECT = 0.07;
@@ -67,6 +76,7 @@ export class Level3Scene {
     this.aimT = 0;
     this.flightT = 0.5;
     this.kickT = -10; // global time of the last strike
+    this.releaseT = null; // global time the ball leaves the foot (null while aiming)
     this.keeperSide = 1;
     this.keeperDelay = 0.3;
     this.keeperReach = 14;
@@ -159,14 +169,16 @@ export class Level3Scene {
     this.popup = { key: `l3.${this.rating}`, color: this.rating === 'perfect' ? PAL.yellow : this.rating === 'good' ? PAL.teal : PAL.red };
     this.popupT = 1.0;
     this.kickT = this.t;
+    this.releaseT = null;
 
     if (this.wild) {
       playSfx('blip');
       this.targetX = 300;
       this.flightT = 0.5;
       this.phase = 'flight';
-      this.timer = 0;
+      this.timer = -KICK_RISE; // the ball waits for the foot to reach it
       this.tauArrival = 0.5;
+      this.releaseT = this.kickT + KICK_RISE; // no aiming: a quick kick
       return;
     }
 
@@ -191,6 +203,7 @@ export class Level3Scene {
     this.tauArrival = this.aimT + this.flightT;
     this.phase = 'flight';
     this.timer = 0;
+    this.releaseT = this.t;
     playSfx('select', { pitch: 1.5, vol: 0.6 });
   }
 
@@ -256,7 +269,8 @@ export class Level3Scene {
   ballAt(p) {
     const x = CROSS.x + (HIT.x - CROSS.x) * p;
     const ground = CROSS.y + (HIT.y - CROSS.y) * p;
-    const h = Math.sin(Math.PI * p) * 34;
+    // arc over, and end up in the air at the kick point (HOVER px up)
+    const h = Math.sin(Math.PI * p) * 34 + HOVER * p * p;
     return { x, ground, y: ground - h, scale: p < 0.5 ? 1 : 2 };
   }
 
@@ -308,19 +322,15 @@ export class Level3Scene {
       this.drawRing(c);
     } else if (this.phase === 'aim') {
       drawSprite(c, SPRITES.ball.shadow, HIT.x, HIT.y, { scale: 2 });
-      drawSprite(c, SPRITES.ball.still, HIT.x, HIT.y - 22, { scale: 2 });
     } else if (this.phase === 'flight') {
       this.drawFlight(c);
     }
 
-    // the player from behind (kicks in front when striking)
-    const jump = this.jumpHeight();
-    const since = this.sinceKick();
-    const strike = since >= 0 && since < 0.45; // the scissor kick frames
-    const sprite = strike
-      ? SPRITES.player.kick[Math.min(2, Math.floor((since / 0.45) * 3))]
-      : jump > 0 ? SPRITES.player.jump : SPRITES.player.back;
-    drawSprite(c, sprite, PLAYER.x, PLAYER.y - jump, { scale: 2 });
+    // the player from behind, or the jump kick when striking
+    const { h, sprite } = this.kickPose();
+    drawSprite(c, sprite, PLAYER.x, PLAYER.y - Math.round(h), { scale: 2 });
+    // while aiming the ball sits on the raised foot: draw it over the player so it reads
+    if (this.phase === 'aim') drawSprite(c, SPRITES.ball.still, HIT.x, HIT.y - HOVER, { scale: 2 });
 
     // reticle while aiming
     if (this.phase === 'aim') this.drawReticle(c);
@@ -343,11 +353,23 @@ export class Level3Scene {
     return this.pressed ? this.t - this.kickT : -1;
   }
 
-  /** Height of the player's jump after the strike (a half-sine over 0.5 s). */
-  jumpHeight() {
+  /**
+   * The jump kick: rise in the wind-up, hang in the contact pose until the ball
+   * leaves the foot (the whole aim on a clean strike), follow through, land.
+   * Returns the height above the ground and the sprite.
+   */
+  kickPose() {
+    const P = SPRITES.player;
     const since = this.sinceKick();
-    if (since < 0 || since > 0.5) return 0;
-    return Math.sin((since / 0.5) * Math.PI) * 26;
+    if (since < 0) return { h: 0, sprite: P.back };
+    if (since < KICK_RISE) return { h: KICK_H * ease.outQuad(since / KICK_RISE), sprite: P.kick[0] };
+    // the ball leaves after the rise at the earliest (an instant aim lock still shows the contact)
+    const release = this.releaseT == null ? Infinity : Math.max(this.releaseT, this.kickT + KICK_RISE + KICK_MIN_TOP);
+    if (this.t < release) return { h: KICK_H, sprite: P.kick[1] };
+    const r = this.t - release;
+    if (r < KICK_FOLLOW) return { h: KICK_H, sprite: P.kick[2] };
+    if (r < KICK_FOLLOW + KICK_FALL) return { h: KICK_H * (1 - ease.inQuad((r - KICK_FOLLOW) / KICK_FALL)), sprite: P.jump };
+    return { h: 0, sprite: P.back };
   }
 
   drawRing(c) {
@@ -361,7 +383,7 @@ export class Level3Scene {
   drawFlight(c) {
     const p = clamp(this.timer / this.flightT);
     const x = HIT.x + (this.targetX - HIT.x) * ease.outQuad(p);
-    const y = (HIT.y - 22) + (AIM_Y - (HIT.y - 22)) * p;
+    const y = (HIT.y - HOVER) + (AIM_Y - (HIT.y - HOVER)) * p;
     const scale = p < 0.5 ? 2 : 1;
     drawSprite(c, frameAt(SPRITES.ball.roll, this.t, 16), x, y, { scale });
   }
@@ -390,7 +412,8 @@ export class Level3Scene {
     }
 
     if (this.popup && this.popupT > 0 && this.phase !== 'result') {
-      drawText(c, t(this.popup.key), W / 2, 112, { align: 'center', color: this.popup.color, shadow: PAL.black, scale: 1 });
+      // above the jumping player, below the goal reticle
+      drawText(c, t(this.popup.key), W / 2, 72, { align: 'center', color: this.popup.color, shadow: PAL.black, scale: 1 });
     }
     if (this.phase === 'result' && this.lastResult) {
       const big = this.outcome === 'goal' ? 2 : 1;
