@@ -47,6 +47,7 @@ async function runBrowser(name) {
     page.on('console', (m) => { if (m.type() === 'error') problems.push(`${tag}console.error: ${m.text()}`); });
     page.on('pageerror', (e) => problems.push(`${tag}uncaught: ${e.message}`));
     page.on('requestfailed', (r) => problems.push(`${tag}request failed: ${r.url()} ${r.failure()?.errorText}`));
+    page.on('response', (r) => { if (r.status() >= 400) problems.push(`${tag}HTTP ${r.status()}: ${r.url()}`); });
   };
   const shot = async (page, label) => {
     const file = path.join(OUT, `${String(++shotN).padStart(2, '0')}-${label}.png`);
