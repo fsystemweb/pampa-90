@@ -78,11 +78,11 @@ function buildAssets() {
   ellipsePx(f, PAL.skin, FCX, 50, 22, 28);
   ellipsePx(f, PAL.skinDark, FCX + 19, 52, 3, 6); // ears
   ellipsePx(f, PAL.skinDark, FCX - 19, 52, 3, 6);
-  ellipsePx(f, PAL.woodDark, FCX, 30, 24, 16); // hair
-  rect(f, PAL.woodDark, 22, 34, 4, 14);
-  rect(f, PAL.woodDark, 62, 34, 4, 14);
-  rect(f, PAL.woodDark, 33, 44, 6, 1); // brows
-  rect(f, PAL.woodDark, 49, 44, 6, 1);
+  ellipsePx(f, PAL.black, FCX, 30, 24, 16); // hair (black, #106)
+  rect(f, PAL.black, 22, 34, 4, 14);
+  rect(f, PAL.black, 62, 34, 4, 14);
+  rect(f, PAL.black, 33, 44, 6, 1); // brows
+  rect(f, PAL.black, 49, 44, 6, 1);
   rect(f, PAL.ink, 34, 47, 5, 2); // eyes
   rect(f, PAL.ink, 49, 47, 5, 2);
   rect(f, PAL.skinDark, 43, 52, 2, 5); // nose
