@@ -5,6 +5,9 @@
 // the stamina bar; every hit drains it and makes you stumble. Full bar = finish.
 // The fuller the bar, the faster the run and the more obstacles (#94): the
 // difficulty follows the bar both ways, so a hit also eases it a little.
+// #105: the speed ramps on an ease-in curve (gentle start, steep end), the second
+// half of the bar throws combined patterns (lane change + hop), hits cost more the
+// fuller the bar, and the bar must be full before LIMIT seconds or the run fails.
 
 import { W, H } from '../data/config.js';
 import { PAL } from '../data/palette.js';
@@ -31,9 +34,13 @@ const GAIN = GOAL / RUN_TIME; // stamina per second
 const HOP_V = 190; // hop launch speed (px/s)
 const GRAV = 560;
 // difficulty at an empty bar -> at a full bar
-const SPEED = [64, 140]; // scroll speed (px/s)
-const SPAWN = [2.1, 0.95]; // base gap between obstacles (s), plus up to SPAWN_JITTER
-const SPAWN_JITTER = 0.8;
+const SPEED = [64, 196]; // scroll speed (px/s), eased in (progress^2)
+const SPAWN = [2.1, 0.8]; // base gap between obstacles (s), plus up to SPAWN_JITTER
+const SPAWN_JITTER = 0.7;
+const PATTERN_FROM = 0.45; // combined patterns start once the bar is this full
+const HIT_COST = [12, 22]; // stamina lost per hit, empty bar -> full bar
+const LIMIT = 75; // seconds: bar not full by then = out of breath, level failed
+const COMBO_GAP = 0.85; // seconds between the two halves of a pattern (> hop airtime 0.68 s)
 
 // fixed parallax layers for the scenery
 const TREES_FAR = Array.from({ length: 8 }, (_, i) => i * 70);
@@ -79,7 +86,8 @@ export class Level2Scene {
 
   /** Scroll speed in px/s (ramps up as the stamina bar fills). */
   get speed() {
-    const base = SPEED[0] + (SPEED[1] - SPEED[0]) * this.progress;
+    const p = this.progress;
+    const base = SPEED[0] + (SPEED[1] - SPEED[0]) * p * p;
     const f = (this.stumble > 0 ? 0.35 : 1) * (this.slow > 0 ? 0.6 : 1);
     return base * f;
   }
@@ -128,7 +136,8 @@ export class Level2Scene {
     this.nextSpawn -= dt;
     if (this.nextSpawn <= 0) {
       this.spawn();
-      this.nextSpawn = SPAWN[0] + (SPAWN[1] - SPAWN[0]) * this.progress + Math.random() * SPAWN_JITTER;
+      const p = this.progress;
+      this.nextSpawn += SPAWN[0] + (SPAWN[1] - SPAWN[0]) * Math.pow(p, 1.5) + Math.random() * SPAWN_JITTER * (1 - 0.4 * p);
     }
 
     // move obstacles and resolve encounters
@@ -150,6 +159,7 @@ export class Level2Scene {
     // stamina: clean running fills it, hits drain it
     if (this.stumble <= 0) this.stamina = Math.min(GOAL, this.stamina + GAIN * dt * (this.slow > 0 ? 0.6 : 1));
     if (this.stamina >= GOAL) this.finish();
+    else if (this.elapsed >= LIMIT) this.fail();
   }
 
   setLane(lane) {
@@ -158,10 +168,49 @@ export class Level2Scene {
     playSfx('select', { vol: 0.5 });
   }
 
+  /**
+   * Adds an obstacle that reaches the player `delay` seconds after something entering the
+   * screen now would. Hop/dodge obstacles in one lane always arrive at least COMBO_GAP apart,
+   * so every pattern stays avoidable at top speed (a hop lasts 0.68 s).
+   */
+  add(kind, lane, delay = 0) {
+    const sp = this.speed;
+    const vel = (k) => sp + (k === 'cow' ? 22 : 0);
+    let arrive = (340 - PX) / sp + delay;
+    if (kind !== 'puddle') {
+      for (const o of this.obstacles) {
+        if (o.lane === lane && o.kind !== 'puddle' && !o.done) arrive = Math.max(arrive, (o.x - PX) / vel(o.kind) + COMBO_GAP);
+      }
+    }
+    this.obstacles.push({ kind, lane, x: PX + arrive * vel(kind), warned: false, done: false });
+  }
+
   spawn() {
+    const p = this.progress;
+    const L = Math.random() < 0.5 ? 0 : 1;
+    // second half of the bar: more and more combined patterns that need a lane change and a hop
+    if (p >= PATTERN_FROM && Math.random() < 0.35 + 0.5 * (p - PATTERN_FROM) / (1 - PATTERN_FROM)) {
+      const r = Math.random();
+      if (r < 0.4) {
+        // cow in one lane, molehill in the other right after: switch then hop, or hop the cow
+        this.add('cow', L);
+        this.add('molehill', 1 - L, COMBO_GAP);
+      } else if (r < 0.7) {
+        // a cow in each lane, staggered: hop one of them
+        this.add('cow', L);
+        this.add('cow', 1 - L, COMBO_GAP);
+      } else {
+        // molehills across both lanes, then a cow: hop, then dodge or hop again
+        this.add('molehill', 0);
+        this.add('molehill', 1);
+        this.add('cow', L, COMBO_GAP);
+      }
+      this.nextSpawn += COMBO_GAP; // leave room after the pattern
+      return;
+    }
     const r = Math.random();
     const kind = r < 0.6 ? 'cow' : r < 0.82 ? 'molehill' : 'puddle';
-    this.obstacles.push({ kind, lane: Math.random() < 0.5 ? 0 : 1, x: 340, warned: false, done: false });
+    this.add(kind, L);
   }
 
   collide(o, y) {
@@ -178,7 +227,8 @@ export class Level2Scene {
       return;
     }
     this.hits++;
-    this.stamina = Math.max(0, this.stamina - 8);
+    const p = this.progress;
+    this.stamina = Math.max(0, this.stamina - (HIT_COST[0] + (HIT_COST[1] - HIT_COST[0]) * p));
     this.stumble = 1.0;
     this.say('l2.hit', 1.4);
     playSfx('hurt');
@@ -192,9 +242,19 @@ export class Level2Scene {
     this.done = true;
     this.say('l2.done', 1.6);
     playSfx('win');
-    const stars = this.hits === 0 ? 3 : this.hits <= 2 ? 2 : 1;
+    const stars = this.hits === 0 ? 3 : this.hits <= 1 ? 2 : 1;
     after(1.6, () => {
       scenes.go('results', { level: 2, stars, time: this.elapsed, passed: true }, { wipe: 'iris' });
+    });
+  }
+
+  fail() {
+    if (this.done) return;
+    this.done = true;
+    this.say('l2.fail', 1.8);
+    playSfx('hurt');
+    after(1.6, () => {
+      scenes.go('results', { level: 2, stars: 0, time: this.elapsed, passed: false }, { wipe: 'dither' });
     });
   }
 
@@ -279,6 +339,9 @@ export class Level2Scene {
   drawHud(c) {
     drawText(c, t('l2.stamina', { n: Math.floor(this.stamina) }), 8, 16, { color: PAL.white, shadow: PAL.black });
     drawBar(c, 8, 26, 120, 7, this.stamina / GOAL, { fg: PAL.teal, segments: 4 });
+    const left = Math.max(0, Math.ceil(LIMIT - this.elapsed));
+    const warn = left <= 15 && Math.floor(this.t * 4) % 2 === 0;
+    drawText(c, t('l2.time', { n: left }), W - 8, 16, { align: 'right', color: warn ? PAL.red : PAL.white, shadow: PAL.black });
     if (this.msgT > 0 && this.msgKey) {
       drawText(c, t(this.msgKey), W / 2, 40, { align: 'center', color: PAL.yellow, shadow: PAL.black });
     }
