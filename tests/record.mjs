@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, rmSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { ROOT, sleep, startServer, waitBoot, waitScene, goScene } from './lib.mjs';
+import { ROOT, sleep, startServer, waitBoot, waitScene, goScene, goLevel, headerOnce } from './lib.mjs';
 
 const TMP = path.join(ROOT, 'screenshots/tmp/video');
 const OUT = path.join(ROOT, 'screenshots/pampa-90.gif');
@@ -21,7 +21,7 @@ try {
   const size = { width: 640, height: 360 };
   const ctx = await browser.newContext({ viewport: size, recordVideo: { dir: TMP, size } });
   await ctx.addInitScript(() => {
-    try { localStorage.setItem('pampa90.save', JSON.stringify({ levels: { 1: { stars: 3, time: 24.6 }, 2: { stars: 3, time: 41.2 }, 3: { stars: 2, time: 19.8 }, 4: { stars: 3, time: 35.4 } } })); } catch { /* ignore */ }
+    try { localStorage.setItem('pampa90.save', JSON.stringify({ v: 2, levels: { 1: { stars: 3, time: 24.6 }, 2: { stars: 3, time: 41.2 }, 3: { stars: 2, time: 47.3 }, 4: { stars: 2, time: 19.8 }, 5: { stars: 3, time: 35.4 } } })); } catch { /* ignore */ }
     // the touch / mute / fullscreen buttons are DOM overlays: keep them out of the clip
     addEventListener('DOMContentLoaded', () => {
       const st = document.createElement('style');
@@ -49,24 +49,29 @@ try {
   await sleep(1600);
 
   // L1: shave a few strokes
-  await goScene(page, 'level1', { level: 1 });
+  await goLevel(page, 'shave');
   await sleep(1800);
   await page.keyboard.down('Space');
   for (const k of ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowDown', 'ArrowRight']) { await page.keyboard.down(k); await sleep(420); await page.keyboard.up(k); }
   await page.keyboard.up('Space');
 
   // L2: hop over the cows
-  await goScene(page, 'level2', { level: 2 });
+  await goLevel(page, 'run');
   await sleep(1500);
   for (let i = 0; i < 5; i++) { await press('Space'); await sleep(600); if (i === 2) await press('ArrowDown'); }
 
-  // L3: timing ring, then aim
-  await goScene(page, 'level3', { level: 3 });
+  // Headers: two push-up headers
+  await goLevel(page, 'header');
+  await sleep(400);
+  for (let i = 0; i < 2; i++) await headerOnce(page, 600);
+
+  // Targeting: timing ring, then aim
+  await goLevel(page, 'kick');
   await sleep(1600);
   for (let i = 0; i < 4; i++) { await press('Space'); await sleep(700); }
 
-  // L4: breathe in / out
-  await goScene(page, 'level4', { level: 4 });
+  // Doctor check: breathe in / out
+  await goLevel(page, 'doctor');
   await sleep(1500);
   for (let i = 0; i < 3; i++) { await press('Space', 900); await sleep(800); }
 

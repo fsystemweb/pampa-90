@@ -254,6 +254,100 @@ export function frontFigure(o, p, back = false) {
   return compact(g, o);
 }
 
+// ---------------------------------------------------------------- prone view (heading push-ups, #108)
+const PW = 32; // prone grid
+const PH = 20;
+const PGROUND = PH - 1; // lowest row: toes and hands rest on it
+const P_SHOULDER_X = 21;
+/** Thick polyline for near-horizontal limbs: each point fills `th` pixels downwards. */
+function band(g, pts, colorAt, th = 2) {
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x0, y0] = pts[i];
+    const [x1, y1] = pts[i + 1];
+    const n = Math.max(1, Math.ceil(Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)) * 2));
+    for (let k = 0; k <= n; k++) {
+      const f = k / n;
+      const x = x0 + (x1 - x0) * f;
+      const y = y0 + (y1 - y0) * f;
+      const c = colorAt((i + f) / (pts.length - 1));
+      for (let j = 0; j < th; j++) g.set(x, y + j, c);
+    }
+  }
+}
+
+/**
+ * Face-down figure, head on the right (facing right), for the heading push-ups.
+ * p: { lift: 0..9 (shoulder height above the ground), hands: 'side'|'planted'|'reach',
+ *      knee: 0..1 (pull one knee forward, crawl), headDy, mouth }
+ * The chest rises (cobra-style explosive push-up) while the hips stay low.
+ */
+export function proneFigure(o, p) {
+  const g = new Grid(PW, PH);
+  const lift = p.lift ?? 0;
+  const sy = PGROUND - 3 - lift; // shoulder (top of the chest)
+  const hipX = 12;
+  const hipY = PGROUND - 3 - Math.round(lift * 0.2);
+  const SX = P_SHOULDER_X;
+
+  // far arm (darker), drawn first
+  const handX = p.hands === 'reach' ? SX + 4 : SX;
+  if (p.hands === 'side') band(g, [[SX - 1, sy + 1], [SX - 5, PGROUND - 2], [SX - 8, PGROUND - 1]], armColor(o, true), 1);
+  else limb(g, [[SX - 1, sy + 1], [SX - 3 - Math.max(0, 6 - lift) * 0.5, sy + 1 + (PGROUND - sy) * 0.45], [handX - 1, PGROUND]], armColor(o, true));
+
+  // legs: toes on the ground at the left, knees, hips
+  const knee = p.knee ?? 0;
+  const legC = (dark) => (t) => legColor(o, dark)(1 - t);
+  band(g, [[2, PGROUND - 2], [7 + knee * 2, PGROUND - 2 - knee * 2], [hipX, hipY]], legC(true));
+  band(g, [[3, PGROUND - 1], [8, PGROUND - 1], [hipX, hipY + 1]], legC(false));
+  g.rect(0, PGROUND - 2, 2, 3, 'K'); // shoe soles (toes dug in)
+  g.rect(1, PGROUND - 1, 2, 2, 'k');
+
+  // shorts / hips, then the chest as 4px-thick columns from the hips to the shoulders
+  g.rect(hipX - 2, hipY, 4, 3, 'c');
+  g.rect(hipX - 2, hipY, 4, 1, 'C');
+  for (let x = hipX + 1; x <= SX; x++) {
+    const f = (x - hipX) / (SX - hipX);
+    const y = Math.round(hipY + (sy - hipY) * f);
+    g.rect(x, y, 1, 4, 'a');
+    g.set(x, y, 'A'); // the back
+  }
+  const midX = Math.round((hipX + SX) / 2) + 1;
+  const midY = Math.round(hipY + (sy - hipY) * ((midX - hipX) / (SX - hipX)));
+  g.rect(midX, midY, 1, 4, 'b');
+  g.rect(midX + 1, midY, 1, 4, 'y');
+
+  // head (same look as the side view), neck at the shoulders
+  const hx = SX + 1;
+  const hy = sy - 5 + (p.headDy ?? 0);
+  g.rect(SX + 1, sy, 2, 2, 'S');
+  g.rect(hx + 1, hy + 1, 5, 5, 's');
+  g.set(hx + 6, hy + 4, 's'); // nose
+  g.rect(hx, hy, 6, 2, 'h');
+  g.rect(hx, hy + 2, 2, 3, 'h');
+  if (o.headband) {
+    g.rect(hx, hy + 2, 6, 1, 'b');
+    g.set(hx - 1, hy + 3, 'b');
+  }
+  g.set(hx + 2, hy + 4, 'S'); // ear
+  g.set(hx + 4, hy + 3, 'e'); // eye
+  g.rect(hx + 4, hy + 5, p.mouth === 'open' ? 1 : 2, 1, p.mouth === 'open' ? 'e' : 'S');
+
+  // near arm
+  if (p.hands === 'side') band(g, [[SX, sy + 2], [SX - 4, PGROUND - 1], [SX - 7, PGROUND]], armColor(o, false), 1);
+  else limb(g, [[SX, sy + 1], [SX - 2 - Math.max(0, 6 - lift) * 0.5, sy + 1 + (PGROUND - sy) * 0.45], [handX, PGROUND]], armColor(o, false));
+  return g;
+}
+
+export const PRONE_POSES = {
+  flat: { lift: 0, hands: 'side' }, // resting on the grass
+  load: { lift: 0, hands: 'planted', headDy: 1 }, // chest low, hands set, chin down
+  up1: { lift: 3, hands: 'planted', mouth: 'open' }, // explosive push-up: low / mid / high
+  up2: { lift: 6, hands: 'planted', mouth: 'open' },
+  up3: { lift: 9, hands: 'planted', mouth: 'open' },
+  crawl0: { lift: 1, hands: 'reach', knee: 1 },
+  crawl1: { lift: 1, hands: 'planted', knee: 0 },
+};
+
 // ---------------------------------------------------------------- poses
 export const SIDE_POSES = {
   stand: {
@@ -302,6 +396,23 @@ export const SIDE_POSES = {
     armB: [[3, 10], [1, 8]], armF: [[11, 9], [14, 7]],
     legB: { knee: [8, 20], foot: [8, 22] }, legF: { knee: [12, 15], foot: [14, 11] },
   },
+};
+
+// friend's two-hand toss (#108): ball held at the chest, then arms swing up and forward
+SIDE_POSES.toss0 = {
+  lean: -1,
+  armB: [[8, 13], [11, 14]], armF: [[9, 13], [12, 14]],
+  legB: { knee: [6, 20], foot: [5, 22] }, legF: { knee: [9, 20], foot: [10, 22] },
+};
+SIDE_POSES.toss1 = {
+  lean: 1,
+  armB: [[11, 9], [13, 6]], armF: [[12, 10], [14, 7]],
+  legB: { knee: [6, 20], foot: [5, 22] }, legF: { knee: [10, 20], foot: [11, 22] },
+  mouth: 'open',
+};
+SIDE_POSES.catch = {
+  armB: [[10, 11], [13, 11]], armF: [[11, 12], [14, 12]],
+  legB: { knee: [6, 20], foot: [6, 22] }, legF: { knee: [9, 20], foot: [9, 22] },
 };
 
 // doctor sitting on the grass (facing right; flip to face the other way), holding a clipboard
@@ -369,8 +480,29 @@ export function buildPlayerSet(outfit, { full = true } = {}) {
   return set;
 }
 
-/** Friend crosser: same moves as the player, plus a throw/cross pose. */
-const buildFriendSet = () => buildPlayerSet(OUTFITS.friend);
+/** Friend crosser: same moves as the player, plus the two-hand toss and catch (#108). */
+function buildFriendSet() {
+  const o = OUTFITS.friend;
+  const pal = palFor(o);
+  const anchor = [OX + 9, GH + 2];
+  return {
+    ...buildPlayerSet(o),
+    toss: ['toss0', 'toss1'].map((n) => finish(sideFigure(o, SIDE_POSES[n]), pal, anchor)),
+    catch: finish(sideFigure(o, SIDE_POSES.catch), pal, anchor),
+  };
+}
+
+/** Prone push-up set: anchor at the shoulders' x on the ground line (outline adds 1px). */
+function buildProneSet(o) {
+  const pal = palFor(o);
+  const anchor = [P_SHOULDER_X + 1, PH + 1];
+  const mk = (name) => finish(proneFigure(o, PRONE_POSES[name]), pal, anchor);
+  return {
+    flat: mk('flat'), load: mk('load'),
+    up: [mk('up1'), mk('up2'), mk('up3')],
+    crawl: [mk('crawl0'), mk('crawl1')],
+  };
+}
 
 /** Keeper (front view): ready stance, jump save, and left/right dives (rotated armsUp). */
 function buildKeeperSet() {
@@ -405,6 +537,6 @@ export const humans = {
   keeper: buildKeeperSet(),
   doctor: buildDoctorSet(),
   player: buildPlayerSet(OUTFITS.player),
-  playerJog: buildPlayerSet(OUTFITS.playerJog, { full: false }),
+  playerJog: { ...buildPlayerSet(OUTFITS.playerJog, { full: false }), prone: buildProneSet(OUTFITS.playerJog) },
   playerTrack: buildPlayerSet(OUTFITS.playerTrack, { full: false }),
 };

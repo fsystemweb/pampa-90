@@ -94,7 +94,7 @@ function makeButton(root, action, label, cls) {
   const end = (e) => { release(action, e.pointerId); b.classList.toggle('on', touch[action]); };
   b.addEventListener('pointerdown', (e) => {
     e.preventDefault();
-    b.setPointerCapture?.(e.pointerId);
+    try { b.setPointerCapture?.(e.pointerId); } catch { /* no active pointer (synthetic events) */ }
     press(action, e.pointerId);
     b.classList.add('on');
   });

@@ -1,26 +1,44 @@
-// Level order and briefing content. The game is linear: L1 -> L2 -> L3 -> L4 -> ending.
+// Level order and briefing content. The game is linear: level 1 -> ... -> LEVEL_COUNT -> ending.
 // All text comes from strings.js (keys below).
+//
+// Each level has a stable `key`; its number (`id`, 1-based) and scene name (`level<id>`,
+// so index.html#scene=level3 jumps to the third level) follow from its position here.
+// Scenes ask for their own number with levelOf(key), so reordering only touches this list
+// (plus a save migration in engine/save.js: saves are keyed by level number).
 
-export const LEVELS = [
+const ORDER = [
   {
-    id: 1, scene: 'level1', name: 'l1.name', lines: ['l1.b1', 'l1.b2', 'l1.b3'], hint: 'l1.hint',
+    key: 'shave', name: 'l1.name', lines: ['l1.b1', 'l1.b2', 'l1.b3'], hint: 'l1.hint',
     controls: [['move', 'ctl.move'], ['primary', 'ctl.shave'], ['secondary', 'ctl.dip']],
   },
   {
-    id: 2, scene: 'level2', name: 'l2.name', lines: ['l2.b1', 'l2.b2', 'l2.b3'], hint: 'l2.hint',
+    key: 'run', name: 'l2.name', lines: ['l2.b1', 'l2.b2', 'l2.b3'], hint: 'l2.hint',
     controls: [['primary', 'ctl.hop']],
   },
   {
-    id: 3, scene: 'level3', name: 'l3.name', lines: ['l3.b1', 'l3.b2', 'l3.b3'], hint: 'l3.hint',
+    key: 'header', name: 'hp.name', lines: ['hp.b1', 'hp.b2', 'hp.b3'], hint: 'hp.hint',
+    controls: [['primary', 'ctl.header']],
+  },
+  {
+    key: 'kick', name: 'l3.name', lines: ['l3.b1', 'l3.b2', 'l3.b3'], hint: 'l3.hint',
     controls: [['primary', 'ctl.jump']],
   },
   {
-    id: 4, scene: 'level4', name: 'l4.name', lines: ['l4.b1', 'l4.b2', 'l4.b3'], hint: 'l4.hint',
+    key: 'doctor', name: 'l4.name', lines: ['l4.b1', 'l4.b2', 'l4.b3'], hint: 'l4.hint',
     controls: [['primary', 'ctl.breathe']],
   },
 ];
 
+export const LEVELS = ORDER.map((def, i) => ({ ...def, id: i + 1, scene: `level${i + 1}` }));
+
 export const LEVEL_COUNT = LEVELS.length;
+
+/** 1-based level number of the level with this key. */
+export function levelOf(key) {
+  const i = LEVELS.findIndex((d) => d.key === key);
+  if (i < 0) throw new Error(`unknown level key ${key}`);
+  return i + 1;
+}
 
 /** Where to go once `level` is finished: [sceneName, params]. */
 export function nextAfter(level) {

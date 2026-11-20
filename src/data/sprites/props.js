@@ -405,6 +405,17 @@ function tile(base, speck, speck2, seed, count = 10) {
   return g;
 }
 
+// ---------------------------------------------------------------- training cone (#108)
+function cone() {
+  const g = new Grid(7, 8);
+  for (let y = 0; y < 6; y++) {
+    const half = Math.floor(y / 2);
+    g.rect(3 - half, y, half * 2 + 1, 1, y === 2 || y === 3 ? 'w' : 'r');
+  }
+  g.rect(0, 6, 7, 2, 'R'); // base
+  return g;
+}
+
 export const props = {
   ball: {
     roll: [0, 1, 2, 3].map((f) => sprite(ballGrid(f), { anchor: [5, 10] })),
@@ -427,6 +438,7 @@ export const props = {
     tuft: sprite(tuft(), { outline: false }),
     puddle: sprite(puddle()),
     molehill: sprite(molehill()),
+    cone: sprite(cone(), { anchor: [4, 9] }),
     tree: sprite(tree(true), { anchor: [15, 40] }),
     treeSmall: sprite(tree(false), { anchor: [8, 22] }),
   },
