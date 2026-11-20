@@ -55,6 +55,13 @@ const ICONS = { // keyed by the level key in src/data/levels.js
     drawSprite(c, SPRITES.ball.roll[Math.floor(tt * 12) % 4], bx, by, { scale: 2 });
     drawSprite(c, SPRITES.run.cone, 84, 66);
   },
+  abs(c, tt) { // hanging from a branch, curling up and down
+    rect(c, PAL.grass, 0, 58, 92, 12);
+    rect(c, PAL.wood, 0, 10, 92, 4);
+    rect(c, PAL.woodDark, 0, 13, 92, 1);
+    const k = Math.round((Math.sin(tt * 3) * 0.5 + 0.5) * 7);
+    drawSprite(c, SPRITES.playerAbs.hang.swing2[k], 40, 13, { scale: 2 });
+  },
   kick(c, tt) { // kick pose + ball arc
     rect(c, PAL.grass, 0, 56, 92, 14);
     const k = Math.floor(tt * 2.5) % 3;

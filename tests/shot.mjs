@@ -13,7 +13,7 @@ const browser = await chromium.launch();
 try {
   const ctx = await browser.newContext({ viewport: { width: 960, height: 540 } });
   await ctx.addInitScript(() => {
-    try { localStorage.setItem('pampa90.save', JSON.stringify({ v: 2, levels: { 1: { stars: 3, time: 24.6 }, 2: { stars: 3, time: 41.2 }, 3: { stars: 2, time: 47.3 }, 4: { stars: 2, time: 19.8 }, 5: { stars: 3, time: 35.4 } } })); } catch { /* ignore */ }
+    try { localStorage.setItem('pampa90.save', JSON.stringify({ v: 3, levels: { 1: { stars: 3, time: 24.6 }, 2: { stars: 3, time: 41.2 }, 3: { stars: 2, time: 47.3 }, 4: { stars: 3, time: 44.1 }, 5: { stars: 2, time: 19.8 }, 6: { stars: 3, time: 35.4 } } })); } catch { /* ignore */ }
     // the mute / fullscreen buttons are DOM overlays on top of the canvas: keep them out
     addEventListener('DOMContentLoaded', () => {
       const st = document.createElement('style');
@@ -64,6 +64,12 @@ try {
   await headerOnce(page);
   await shot('headers');
 
+  await goLevel(page, 'abs');
+  await sleep(1200);
+  await page.keyboard.down('Space'); await sleep(420);
+  await shot('abs');
+  await page.keyboard.up('Space');
+
   await goLevel(page, 'kick');
   await sleep(1700);
   await shot('targeting');
@@ -75,7 +81,7 @@ try {
   await shot('doctor');
   await page.keyboard.up('Space');
 
-  await goScene(page, 'results', { level: 4, stars: 2, time: 19.8, passed: true });
+  await goScene(page, 'results', { level: 5, stars: 2, time: 19.8, passed: true });
   await sleep(2200);
   await shot('results');
   await goScene(page, 'ending');

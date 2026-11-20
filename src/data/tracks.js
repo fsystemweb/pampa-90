@@ -102,6 +102,15 @@ export const TRACKS = {
     ],
   },
 
+  abs: { // upside-down abs (#107): steady E minor count, low and patient
+    bpm: 96,
+    channels: [
+      { wave: 'pulse25', vol: 0.12, notes: ['E5:4 G5:4 B5:4 G5:4', 'C5:4 E5:4 G5:4 E5:4', 'D5:4 F#5:4 A5:4 F#5:4', 'B4:4 D#5:4 F#5:4 B5:4'].join(' ') },
+      { wave: 'triangle', vol: 0.28, notes: ['E2:8 B2:8', 'C2:8 G2:8', 'D2:8 A2:8', 'B1:8 F#2:8'].join(' ') },
+      { wave: 'noise', vol: 0.08, notes: rep('K:8 S:8', 4) },
+    ],
+  },
+
   level4: { // doctor check: soft lullaby in F
     bpm: 72,
     channels: [
