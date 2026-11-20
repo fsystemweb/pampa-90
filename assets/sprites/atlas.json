@@ -1,6 +1,6 @@
 {
  "width": 510,
- "height": 284,
+ "height": 398,
  "sprites": [
   {
    "name": "shave.post",
@@ -99,10 +99,490 @@
    ]
   },
   {
+   "name": "playerAbs.hang.swing0",
+   "frame": 0,
+   "x": 423,
+   "y": 2,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing0",
+   "frame": 1,
+   "x": 461,
+   "y": 2,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing0",
+   "frame": 2,
+   "x": 2,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing0",
+   "frame": 3,
+   "x": 40,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing0",
+   "frame": 4,
+   "x": 78,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing0",
+   "frame": 5,
+   "x": 116,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing0",
+   "frame": 6,
+   "x": 154,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing0",
+   "frame": 7,
+   "x": 192,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing1",
+   "frame": 0,
+   "x": 230,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing1",
+   "frame": 1,
+   "x": 268,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing1",
+   "frame": 2,
+   "x": 306,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing1",
+   "frame": 3,
+   "x": 344,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing1",
+   "frame": 4,
+   "x": 382,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing1",
+   "frame": 5,
+   "x": 420,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing1",
+   "frame": 6,
+   "x": 458,
+   "y": 126,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing1",
+   "frame": 7,
+   "x": 2,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing2",
+   "frame": 0,
+   "x": 40,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing2",
+   "frame": 1,
+   "x": 78,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing2",
+   "frame": 2,
+   "x": 116,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing2",
+   "frame": 3,
+   "x": 154,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing2",
+   "frame": 4,
+   "x": 192,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing2",
+   "frame": 5,
+   "x": 230,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing2",
+   "frame": 6,
+   "x": 268,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing2",
+   "frame": 7,
+   "x": 306,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing3",
+   "frame": 0,
+   "x": 344,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing3",
+   "frame": 1,
+   "x": 382,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing3",
+   "frame": 2,
+   "x": 420,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing3",
+   "frame": 3,
+   "x": 458,
+   "y": 164,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing3",
+   "frame": 4,
+   "x": 2,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing3",
+   "frame": 5,
+   "x": 40,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing3",
+   "frame": 6,
+   "x": 78,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing3",
+   "frame": 7,
+   "x": 116,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing4",
+   "frame": 0,
+   "x": 154,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing4",
+   "frame": 1,
+   "x": 192,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing4",
+   "frame": 2,
+   "x": 230,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing4",
+   "frame": 3,
+   "x": 268,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing4",
+   "frame": 4,
+   "x": 306,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing4",
+   "frame": 5,
+   "x": 344,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing4",
+   "frame": 6,
+   "x": 382,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
+   "name": "playerAbs.hang.swing4",
+   "frame": 7,
+   "x": 420,
+   "y": 202,
+   "w": 36,
+   "h": 36,
+   "anchor": [
+    15,
+    10
+   ]
+  },
+  {
    "name": "intro.crowd",
    "frame": 0,
    "x": 2,
-   "y": 126,
+   "y": 240,
    "w": 134,
    "h": 36,
    "anchor": [
@@ -114,7 +594,7 @@
    "name": "intro.crowd",
    "frame": 1,
    "x": 138,
-   "y": 126,
+   "y": 240,
    "w": 134,
    "h": 36,
    "anchor": [
@@ -126,7 +606,7 @@
    "name": "field.fence",
    "frame": 0,
    "x": 274,
-   "y": 126,
+   "y": 240,
    "w": 22,
    "h": 32,
    "anchor": [
@@ -138,7 +618,7 @@
    "name": "friend.idle",
    "frame": 0,
    "x": 298,
-   "y": 126,
+   "y": 240,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -150,7 +630,7 @@
    "name": "friend.run",
    "frame": 0,
    "x": 324,
-   "y": 126,
+   "y": 240,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -162,7 +642,7 @@
    "name": "friend.run",
    "frame": 1,
    "x": 350,
-   "y": 126,
+   "y": 240,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -174,7 +654,7 @@
    "name": "friend.run",
    "frame": 2,
    "x": 376,
-   "y": 126,
+   "y": 240,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -186,7 +666,7 @@
    "name": "friend.run",
    "frame": 3,
    "x": 402,
-   "y": 126,
+   "y": 240,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -198,7 +678,7 @@
    "name": "friend.jump",
    "frame": 0,
    "x": 428,
-   "y": 126,
+   "y": 240,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -210,7 +690,7 @@
    "name": "friend.kick",
    "frame": 0,
    "x": 454,
-   "y": 126,
+   "y": 240,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -222,7 +702,7 @@
    "name": "friend.kick",
    "frame": 1,
    "x": 480,
-   "y": 126,
+   "y": 240,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -234,7 +714,7 @@
    "name": "friend.kick",
    "frame": 2,
    "x": 2,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -246,7 +726,7 @@
    "name": "friend.back",
    "frame": 0,
    "x": 28,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -258,7 +738,7 @@
    "name": "friend.backJump",
    "frame": 0,
    "x": 54,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -270,7 +750,7 @@
    "name": "friend.front",
    "frame": 0,
    "x": 80,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -282,7 +762,7 @@
    "name": "friend.toss",
    "frame": 0,
    "x": 106,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -294,7 +774,7 @@
    "name": "friend.toss",
    "frame": 1,
    "x": 132,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -306,7 +786,7 @@
    "name": "friend.catch",
    "frame": 0,
    "x": 158,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -318,7 +798,7 @@
    "name": "keeper.stand",
    "frame": 0,
    "x": 184,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -330,7 +810,7 @@
    "name": "keeper.guard",
    "frame": 0,
    "x": 210,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -342,7 +822,7 @@
    "name": "keeper.jump",
    "frame": 0,
    "x": 236,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -354,7 +834,7 @@
    "name": "doctor.stand",
    "frame": 0,
    "x": 262,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -366,7 +846,7 @@
    "name": "doctor.sit",
    "frame": 0,
    "x": 288,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -378,7 +858,7 @@
    "name": "doctor.front",
    "frame": 0,
    "x": 314,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -390,7 +870,7 @@
    "name": "doctor.thumbsUp",
    "frame": 0,
    "x": 340,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -402,7 +882,7 @@
    "name": "player.idle",
    "frame": 0,
    "x": 366,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -414,7 +894,7 @@
    "name": "player.run",
    "frame": 0,
    "x": 392,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -426,7 +906,7 @@
    "name": "player.run",
    "frame": 1,
    "x": 418,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -438,7 +918,7 @@
    "name": "player.run",
    "frame": 2,
    "x": 444,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -450,7 +930,7 @@
    "name": "player.run",
    "frame": 3,
    "x": 470,
-   "y": 164,
+   "y": 278,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -462,7 +942,7 @@
    "name": "player.jump",
    "frame": 0,
    "x": 2,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -474,7 +954,7 @@
    "name": "player.kick",
    "frame": 0,
    "x": 28,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -486,7 +966,7 @@
    "name": "player.kick",
    "frame": 1,
    "x": 54,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -498,7 +978,7 @@
    "name": "player.kick",
    "frame": 2,
    "x": 80,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -510,7 +990,7 @@
    "name": "player.back",
    "frame": 0,
    "x": 106,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -522,7 +1002,7 @@
    "name": "player.backJump",
    "frame": 0,
    "x": 132,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -534,7 +1014,7 @@
    "name": "player.front",
    "frame": 0,
    "x": 158,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -546,7 +1026,7 @@
    "name": "playerJog.idle",
    "frame": 0,
    "x": 184,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -558,7 +1038,7 @@
    "name": "playerJog.run",
    "frame": 0,
    "x": 210,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -570,7 +1050,7 @@
    "name": "playerJog.run",
    "frame": 1,
    "x": 236,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -582,7 +1062,7 @@
    "name": "playerJog.run",
    "frame": 2,
    "x": 262,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -594,7 +1074,7 @@
    "name": "playerJog.run",
    "frame": 3,
    "x": 288,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -606,7 +1086,7 @@
    "name": "playerJog.jump",
    "frame": 0,
    "x": 314,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -618,7 +1098,7 @@
    "name": "playerTrack.idle",
    "frame": 0,
    "x": 340,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -630,7 +1110,7 @@
    "name": "playerTrack.run",
    "frame": 0,
    "x": 366,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -642,7 +1122,7 @@
    "name": "playerTrack.run",
    "frame": 1,
    "x": 392,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -654,7 +1134,7 @@
    "name": "playerTrack.run",
    "frame": 2,
    "x": 418,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -666,7 +1146,7 @@
    "name": "playerTrack.run",
    "frame": 3,
    "x": 444,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -678,7 +1158,7 @@
    "name": "playerTrack.jump",
    "frame": 0,
    "x": 470,
-   "y": 192,
+   "y": 306,
    "w": 24,
    "h": 26,
    "anchor": [
@@ -690,7 +1170,7 @@
    "name": "friend.lying",
    "frame": 0,
    "x": 2,
-   "y": 220,
+   "y": 334,
    "w": 26,
    "h": 24,
    "anchor": [
@@ -702,7 +1182,7 @@
    "name": "keeper.diveR",
    "frame": 0,
    "x": 30,
-   "y": 220,
+   "y": 334,
    "w": 26,
    "h": 24,
    "anchor": [
@@ -714,7 +1194,7 @@
    "name": "keeper.diveL",
    "frame": 0,
    "x": 58,
-   "y": 220,
+   "y": 334,
    "w": 26,
    "h": 24,
    "anchor": [
@@ -726,7 +1206,7 @@
    "name": "player.lying",
    "frame": 0,
    "x": 86,
-   "y": 220,
+   "y": 334,
    "w": 26,
    "h": 24,
    "anchor": [
@@ -738,7 +1218,7 @@
    "name": "playerJog.lying",
    "frame": 0,
    "x": 114,
-   "y": 220,
+   "y": 334,
    "w": 26,
    "h": 24,
    "anchor": [
@@ -750,7 +1230,7 @@
    "name": "playerTrack.lying",
    "frame": 0,
    "x": 142,
-   "y": 220,
+   "y": 334,
    "w": 26,
    "h": 24,
    "anchor": [
@@ -762,7 +1242,7 @@
    "name": "run.treeSmall",
    "frame": 0,
    "x": 170,
-   "y": 220,
+   "y": 334,
    "w": 18,
    "h": 24,
    "anchor": [
@@ -774,7 +1254,7 @@
    "name": "playerJog.prone.flat",
    "frame": 0,
    "x": 190,
-   "y": 220,
+   "y": 334,
    "w": 34,
    "h": 22,
    "anchor": [
@@ -786,7 +1266,7 @@
    "name": "playerJog.prone.load",
    "frame": 0,
    "x": 226,
-   "y": 220,
+   "y": 334,
    "w": 34,
    "h": 22,
    "anchor": [
@@ -798,7 +1278,7 @@
    "name": "playerJog.prone.up",
    "frame": 0,
    "x": 262,
-   "y": 220,
+   "y": 334,
    "w": 34,
    "h": 22,
    "anchor": [
@@ -810,7 +1290,7 @@
    "name": "playerJog.prone.up",
    "frame": 1,
    "x": 298,
-   "y": 220,
+   "y": 334,
    "w": 34,
    "h": 22,
    "anchor": [
@@ -822,7 +1302,7 @@
    "name": "playerJog.prone.up",
    "frame": 2,
    "x": 334,
-   "y": 220,
+   "y": 334,
    "w": 34,
    "h": 22,
    "anchor": [
@@ -834,7 +1314,7 @@
    "name": "playerJog.prone.crawl",
    "frame": 0,
    "x": 370,
-   "y": 220,
+   "y": 334,
    "w": 34,
    "h": 22,
    "anchor": [
@@ -846,7 +1326,7 @@
    "name": "playerJog.prone.crawl",
    "frame": 1,
    "x": 406,
-   "y": 220,
+   "y": 334,
    "w": 34,
    "h": 22,
    "anchor": [
@@ -858,7 +1338,7 @@
    "name": "cow.stand",
    "frame": 0,
    "x": 442,
-   "y": 220,
+   "y": 334,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -870,7 +1350,7 @@
    "name": "cow.walk",
    "frame": 0,
    "x": 476,
-   "y": 220,
+   "y": 334,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -882,7 +1362,7 @@
    "name": "cow.walk",
    "frame": 1,
    "x": 2,
-   "y": 246,
+   "y": 360,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -894,7 +1374,7 @@
    "name": "cow.walk",
    "frame": 2,
    "x": 36,
-   "y": 246,
+   "y": 360,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -906,7 +1386,7 @@
    "name": "cow.walk",
    "frame": 3,
    "x": 70,
-   "y": 246,
+   "y": 360,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -918,7 +1398,7 @@
    "name": "cow.moo",
    "frame": 0,
    "x": 104,
-   "y": 246,
+   "y": 360,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -930,7 +1410,7 @@
    "name": "clinic.monitorOk",
    "frame": 0,
    "x": 138,
-   "y": 246,
+   "y": 360,
    "w": 28,
    "h": 22,
    "anchor": [
@@ -942,7 +1422,7 @@
    "name": "clinic.monitorBad",
    "frame": 0,
    "x": 168,
-   "y": 246,
+   "y": 360,
    "w": 28,
    "h": 22,
    "anchor": [
@@ -954,7 +1434,7 @@
    "name": "clinic.monitorOff",
    "frame": 0,
    "x": 198,
-   "y": 246,
+   "y": 360,
    "w": 28,
    "h": 22,
    "anchor": [
@@ -966,7 +1446,7 @@
    "name": "shave.bucket",
    "frame": 0,
    "x": 228,
-   "y": 246,
+   "y": 360,
    "w": 22,
    "h": 20,
    "anchor": [
@@ -978,7 +1458,7 @@
    "name": "shave.bucketWater",
    "frame": 0,
    "x": 252,
-   "y": 246,
+   "y": 360,
    "w": 22,
    "h": 20,
    "anchor": [
@@ -990,7 +1470,7 @@
    "name": "intro.plane",
    "frame": 0,
    "x": 276,
-   "y": 246,
+   "y": 360,
    "w": 38,
    "h": 18,
    "anchor": [
@@ -1002,7 +1482,7 @@
    "name": "intro.plane",
    "frame": 1,
    "x": 316,
-   "y": 246,
+   "y": 360,
    "w": 38,
    "h": 18,
    "anchor": [
@@ -1014,7 +1494,7 @@
    "name": "tiles.grass",
    "frame": 0,
    "x": 356,
-   "y": 246,
+   "y": 360,
    "w": 16,
    "h": 16,
    "anchor": [
@@ -1026,7 +1506,7 @@
    "name": "tiles.grassDark",
    "frame": 0,
    "x": 374,
-   "y": 246,
+   "y": 360,
    "w": 16,
    "h": 16,
    "anchor": [
@@ -1038,7 +1518,7 @@
    "name": "tiles.dirt",
    "frame": 0,
    "x": 392,
-   "y": 246,
+   "y": 360,
    "w": 16,
    "h": 16,
    "anchor": [
@@ -1050,7 +1530,7 @@
    "name": "clinic.clipboard",
    "frame": 0,
    "x": 410,
-   "y": 246,
+   "y": 360,
    "w": 12,
    "h": 15,
    "anchor": [
@@ -1062,7 +1542,7 @@
    "name": "intro.duffel",
    "frame": 0,
    "x": 424,
-   "y": 246,
+   "y": 360,
    "w": 22,
    "h": 14,
    "anchor": [
@@ -1074,7 +1554,7 @@
    "name": "icons.warn",
    "frame": 0,
    "x": 448,
-   "y": 246,
+   "y": 360,
    "w": 13,
    "h": 12,
    "anchor": [
@@ -1086,7 +1566,7 @@
    "name": "intro.cloud",
    "frame": 0,
    "x": 463,
-   "y": 246,
+   "y": 360,
    "w": 36,
    "h": 12,
    "anchor": [
@@ -1098,7 +1578,7 @@
    "name": "clinic.cuff",
    "frame": 0,
    "x": 2,
-   "y": 270,
+   "y": 384,
    "w": 18,
    "h": 12,
    "anchor": [
@@ -1110,7 +1590,7 @@
    "name": "shave.cup",
    "frame": 0,
    "x": 22,
-   "y": 270,
+   "y": 384,
    "w": 12,
    "h": 11,
    "anchor": [
@@ -1122,7 +1602,7 @@
    "name": "shave.cupWater",
    "frame": 0,
    "x": 36,
-   "y": 270,
+   "y": 384,
    "w": 12,
    "h": 11,
    "anchor": [
@@ -1134,7 +1614,7 @@
    "name": "run.molehill",
    "frame": 0,
    "x": 50,
-   "y": 270,
+   "y": 384,
    "w": 18,
    "h": 11,
    "anchor": [
@@ -1146,7 +1626,7 @@
    "name": "ball.roll",
    "frame": 0,
    "x": 70,
-   "y": 270,
+   "y": 384,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1158,7 +1638,7 @@
    "name": "ball.roll",
    "frame": 1,
    "x": 82,
-   "y": 270,
+   "y": 384,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1170,7 +1650,7 @@
    "name": "ball.roll",
    "frame": 2,
    "x": 94,
-   "y": 270,
+   "y": 384,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1182,7 +1662,7 @@
    "name": "ball.roll",
    "frame": 3,
    "x": 106,
-   "y": 270,
+   "y": 384,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1194,7 +1674,7 @@
    "name": "ball.still",
    "frame": 0,
    "x": 118,
-   "y": 270,
+   "y": 384,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1206,7 +1686,7 @@
    "name": "run.cone",
    "frame": 0,
    "x": 130,
-   "y": 270,
+   "y": 384,
    "w": 9,
    "h": 10,
    "anchor": [
@@ -1218,7 +1698,7 @@
    "name": "run.puddle",
    "frame": 0,
    "x": 141,
-   "y": 270,
+   "y": 384,
    "w": 22,
    "h": 9,
    "anchor": [
@@ -1230,7 +1710,7 @@
    "name": "shave.razor",
    "frame": 0,
    "x": 165,
-   "y": 270,
+   "y": 384,
    "w": 20,
    "h": 8,
    "anchor": [
@@ -1242,7 +1722,7 @@
    "name": "icons.bubbleTail",
    "frame": 0,
    "x": 187,
-   "y": 270,
+   "y": 384,
    "w": 9,
    "h": 7,
    "anchor": [
@@ -1254,7 +1734,7 @@
    "name": "ball.shadow",
    "frame": 0,
    "x": 198,
-   "y": 270,
+   "y": 384,
    "w": 10,
    "h": 3,
    "anchor": [
@@ -1266,7 +1746,7 @@
    "name": "run.tuft",
    "frame": 0,
    "x": 210,
-   "y": 270,
+   "y": 384,
    "w": 5,
    "h": 3,
    "anchor": [

@@ -116,7 +116,7 @@ async function runBrowser(name) {
     await shot(page, 'briefing-1');
 
     // [stars, time] per level, in the order of src/data/levels.js
-    const results = [[3, 21.4], [2, 33.0], [2, 44.0], [3, 18.2], [1, 40.5]];
+    const results = [[3, 21.4], [2, 33.0], [2, 44.0], [3, 47.9], [3, 18.2], [1, 40.5]];
     const levelCount = await page.evaluate(async () => (await import('./src/data/levels.js')).LEVEL_COUNT);
     check(levelCount === results.length, `smoke results cover ${results.length} levels, the game has ${levelCount}`);
     const totalStars = results.reduce((n, [st]) => n + st, 0);
@@ -199,9 +199,9 @@ async function runBrowser(name) {
     await waitScene(p2, 'title');
     check((await info(p2)).lang === 'es', 'saved language ES not applied at load');
     check((await p2.evaluate(() => document.documentElement.lang)) === 'es', '<html lang> not es at load');
-    // save migration: Targeting 3 -> 4 and Doctor check 4 -> 5, the new level 3 starts empty
+    // save migration (v1 -> v3): Targeting 3 -> 5 and Doctor check 4 -> 6, the new levels 3 and 4 start empty
     const saved = await p2.evaluate(() => JSON.parse(localStorage.getItem('pampa90.save')));
-    check(saved?.v === 2 && !saved.levels[3] && saved.levels[4]?.stars === 1 && saved.levels[5]?.stars === 3 && saved.levels[1]?.stars === 3,
+    check(saved?.v === 3 && !saved.levels[3] && !saved.levels[4] && saved.levels[5]?.stars === 1 && saved.levels[6]?.stars === 3 && saved.levels[1]?.stars === 3,
       `old save not migrated: ${JSON.stringify(saved)}`);
     await sleep(500);
     await shot(p2, 'title-es-load');
@@ -273,6 +273,14 @@ async function runBrowser(name) {
       await abtn.dispatchEvent('pointerup', { pointerId: 7, pointerType: 'touch', isPrimary: true, bubbles: true });
       await sleep(100);
       check(await mp.evaluate(() => { const s = window.pampa.scenes.current; return !s.loading && s.releaseT > 0; }), 'mobile: releasing A did not push up');
+      // upside-down abs: holding A curls up
+      await goScene(mp, 'level4', { level: 4 });
+      await sleep(600);
+      await abtn.dispatchEvent('pointerdown', { pointerId: 8, pointerType: 'touch', isPrimary: true, bubbles: true });
+      await sleep(400);
+      check(await mp.evaluate(() => window.pampa.scenes.current.curl > 0.3), 'mobile: holding A did not curl up');
+      await shot(mp, 'mobile-level4-hold');
+      await abtn.dispatchEvent('pointerup', { pointerId: 8, pointerType: 'touch', isPrimary: true, bubbles: true });
       await goScene(mp, 'level2', { level: 2 });
       await sleep(300);
       // the II button pauses

@@ -21,7 +21,7 @@ try {
   const size = { width: 640, height: 360 };
   const ctx = await browser.newContext({ viewport: size, recordVideo: { dir: TMP, size } });
   await ctx.addInitScript(() => {
-    try { localStorage.setItem('pampa90.save', JSON.stringify({ v: 2, levels: { 1: { stars: 3, time: 24.6 }, 2: { stars: 3, time: 41.2 }, 3: { stars: 2, time: 47.3 }, 4: { stars: 2, time: 19.8 }, 5: { stars: 3, time: 35.4 } } })); } catch { /* ignore */ }
+    try { localStorage.setItem('pampa90.save', JSON.stringify({ v: 3, levels: { 1: { stars: 3, time: 24.6 }, 2: { stars: 3, time: 41.2 }, 3: { stars: 2, time: 47.3 }, 4: { stars: 3, time: 44.1 }, 5: { stars: 2, time: 19.8 }, 6: { stars: 3, time: 35.4 } } })); } catch { /* ignore */ }
     // the touch / mute / fullscreen buttons are DOM overlays: keep them out of the clip
     addEventListener('DOMContentLoaded', () => {
       const st = document.createElement('style');
@@ -64,6 +64,11 @@ try {
   await goLevel(page, 'header');
   await sleep(400);
   for (let i = 0; i < 2; i++) await headerOnce(page, 600);
+
+  // Abs: curl up and down on the count
+  await goLevel(page, 'abs');
+  await sleep(2000);
+  for (let i = 0; i < 2; i++) { await press('Space', 500); await sleep(1700); }
 
   // Targeting: timing ring, then aim
   await goLevel(page, 'kick');

@@ -44,6 +44,11 @@ export const OUTFITS = {
     stripe: PAL.blue, stripe2: PAL.blue, shorts: PAL.blue, shortsDark: PAL.blueDark,
     long: true, shoe: PAL.white, shoeDark: PAL.silver, headband: PAL.yellow,
   },
+  // upside-down abs (#107): white top, blue tracksuit trousers, yellow boots
+  playerAbs: {
+    ...base, hair: HERO_HAIR, stripe: PAL.blue, stripe2: PAL.blue, shorts: PAL.blue, shortsDark: PAL.blueDark,
+    long: true, headband: PAL.yellow,
+  },
   // L3 friend who crosses the ball: yellow shirt, teal shorts
   friend: {
     ...base, skin: '#c98d62', skinDark: '#9a6644', hair: '#ecd27a',
@@ -348,6 +353,90 @@ export const PRONE_POSES = {
   crawl1: { lift: 1, hands: 'planted', knee: 0 },
 };
 
+// ---------------------------------------------------------------- hanging upside down (abs, #107)
+const HW = 34; // hanging grid
+const HH = 34;
+const KNEE = [14, 9]; // knees hooked over the branch (the sprite's anchor)
+export const HANG_CURLS = 8; // curl frames, 0 = hanging straight down, last = chest at the knees
+export const HANG_SWING = [-14, -7, 0, 7, 14]; // sway frames: body angle about the knees (degrees)
+const dirAt = (a) => [Math.sin(a), Math.cos(a)]; // a = 0 points straight down
+
+/**
+ * Hero hanging head down, knees over a branch, ankles tied, hands behind the head.
+ * curl 0..1 swings the torso up towards the knees (a crunch); swing rotates the
+ * whole hanging body about the knees (degrees).
+ */
+export function hangFigure(o, curl, swing) {
+  const g = new Grid(HW, HH);
+  const [kx, ky] = KNEE;
+  const al = (swing * Math.PI) / 180;
+  const add = (p, d, k) => [p[0] + d[0] * k, p[1] + d[1] * k];
+
+  // shins over the branch, boots up and back, rope around the ankles
+  const foot = [kx - 5, ky - 6];
+  limb(g, [[kx - 1, ky], [foot[0], foot[1] + 1]], () => 'C');
+  g.rect(foot[0] - 1, foot[1] - 2, 3, 3, 'k');
+  g.rect(foot[0] - 1, foot[1] - 2, 3, 1, 'K');
+  g.rect(foot[0] - 1, foot[1] + 1, 3, 1, 'q'); // rope
+  g.set(foot[0] + 2, foot[1] + 2, 'q');
+  g.set(foot[0] + 3, foot[1] + 3, 'q');
+
+  // thighs hang from the knees to the hips
+  const hip = add(KNEE, dirAt(al), 8);
+  limb(g, [[kx, ky], hip], () => 'c');
+  limb(g, [[kx - 1, ky], [hip[0] - 1, hip[1]]], () => 'C');
+  g.rect(kx - 1, ky - 1, 3, 2, 'c'); // knees over the branch
+
+  // torso: curls from straight down (0) to up beside the knees (~140 degrees)
+  const a = al + curl * (140 * Math.PI) / 180;
+  const d = dirAt(a);
+  const n = [Math.cos(a), -Math.sin(a)]; // the chest side
+  const sh = add(hip, d, 7);
+  for (let i = 0; i <= 10; i++) {
+    const p = add(hip, d, (7 * i) / 10);
+    g.rect(Math.round(p[0] - 1.5), Math.round(p[1] - 1.5), 4, 4, i < 2 ? 'c' : 'a');
+  }
+  const mid = add(hip, d, 4);
+  g.set(mid[0], mid[1], 'b');
+  g.set(mid[0] + n[0], mid[1] + n[1], 'b');
+
+  // head: hair on the crown (away from the neck), face on the chest side
+  const c = add(hip, d, 10.5);
+  for (let y = Math.floor(c[1] - 3); y <= Math.ceil(c[1] + 3); y++) {
+    for (let x = Math.floor(c[0] - 3); x <= Math.ceil(c[0] + 3); x++) {
+      const rx = x - c[0];
+      const ry = y - c[1];
+      if (rx * rx + ry * ry > 8.2) continue;
+      const along = rx * d[0] + ry * d[1];
+      const side = rx * n[0] + ry * n[1];
+      let col = 's';
+      if (along > 1.1 || (side < -1.2 && along > -0.6)) col = 'h';
+      else if (o.headband && along > 0.3) col = 'b';
+      g.set(x, y, col);
+    }
+  }
+  const eye = add(add(c, n, 1.4), d, 0.2);
+  g.set(eye[0], eye[1], 'e');
+  const mouth = add(add(c, n, 1.6), d, -1.4);
+  g.set(mouth[0], mouth[1], 'S');
+
+  // arms: elbows out in front, hands laced behind the head
+  const elbow = add(add(sh, n, 4.5), d, 2);
+  const hand = add(add(c, n, -1.8), d, -0.5);
+  limb(g, [sh, elbow, hand], armColor(o, false));
+  return g;
+}
+
+function buildHangSet(o) {
+  const pal = palFor(o);
+  const anchor = [KNEE[0] + 1, KNEE[1] + 1];
+  const set = {};
+  HANG_SWING.forEach((sw, i) => {
+    set[`swing${i}`] = Array.from({ length: HANG_CURLS }, (_, k) => finish(hangFigure(o, k / (HANG_CURLS - 1), sw), pal, anchor));
+  });
+  return set;
+}
+
 // ---------------------------------------------------------------- poses
 export const SIDE_POSES = {
   stand: {
@@ -539,4 +628,5 @@ export const humans = {
   player: buildPlayerSet(OUTFITS.player),
   playerJog: { ...buildPlayerSet(OUTFITS.playerJog, { full: false }), prone: buildProneSet(OUTFITS.playerJog) },
   playerTrack: buildPlayerSet(OUTFITS.playerTrack, { full: false }),
+  playerAbs: { hang: buildHangSet(OUTFITS.playerAbs) },
 };

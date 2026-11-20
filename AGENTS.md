@@ -1,10 +1,10 @@
 # AGENTS.md
 
-Pampa '90: an 8-bit browser game (intro plus 5 minigames: shaving, resistance, heading push-ups, targeting, doctor check) in vanilla JS ES modules on an HTML5 canvas, published on GitHub Pages. `PLAN.md` is the design document.
+Pampa '90: an 8-bit browser game (intro plus 6 minigames: shaving, resistance, heading push-ups, upside-down abs, targeting, doctor check) in vanilla JS ES modules on an HTML5 canvas, published on GitHub Pages. `PLAN.md` is the design document.
 
 ## Commands
 - Run: `python3 -m http.server 8000`, then open http://localhost:8000 (ES modules do not load from `file://`)
-- Jump to a scene: open `index.html#scene=level3` (or `title`, `level1` ... `level5`, `results`, `ending`, `dev-ui`, `dev-sprites`); `levelN` is the Nth level in `src/data/levels.js`
+- Jump to a scene: open `index.html#scene=level3` (or `title`, `level1` ... `level6`, `results`, `ending`, `dev-ui`, `dev-sprites`); `levelN` is the Nth level in `src/data/levels.js`
 - Regenerate the sprite atlas: `tools/export-atlas.sh` (needs python3 and google-chrome)
 - Tests: `npm install`, then `npm run smoke` (Chromium) or `npm test` (Chromium, Firefox, WebKit); `npm run shots` / `npm run record` regenerate README media. No build or lint step.
 

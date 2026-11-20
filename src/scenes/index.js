@@ -8,6 +8,7 @@ import { BriefingScene } from './briefing.js';
 import { Level1Scene } from './level1_shave.js';
 import { Level2Scene } from './level2_run.js';
 import { HeaderScene } from './level3_header.js';
+import { AbsScene } from './level4_abs.js';
 import { Level3Scene } from './level5_kick.js';
 import { Level4Scene } from './level6_doctor.js';
 import { ResultsScene } from './results.js';
@@ -19,6 +20,7 @@ const LEVEL_SCENES = {
   shave: Level1Scene,
   run: Level2Scene,
   header: HeaderScene,
+  abs: AbsScene,
   kick: Level3Scene,
   doctor: Level4Scene,
 };

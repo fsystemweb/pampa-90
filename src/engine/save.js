@@ -11,12 +11,14 @@
 // moves the later levels' entries up. Saves without `v` are version 1.
 
 const KEY = 'pampa90.save';
-const VERSION = 2;
+const VERSION = 3;
 
 /** MIGRATIONS[n] turns a version-n `levels` map into version n + 1. */
 const MIGRATIONS = {
   // v2 (#108): Heading push-ups inserted as level 3 - Targeting 3 -> 4, Doctor check 4 -> 5.
   1: (levels) => renumber(levels, { 3: 4, 4: 5 }),
+  // v3 (#107): Upside-down abs inserted as level 4 - Targeting 4 -> 5, Doctor check 5 -> 6.
+  2: (levels) => renumber(levels, { 4: 5, 5: 6 }),
 };
 
 /** Copy of `levels` with the keys in `map` moved (old -> new); unlisted keys stay. */

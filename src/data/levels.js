@@ -20,6 +20,10 @@ const ORDER = [
     controls: [['primary', 'ctl.header']],
   },
   {
+    key: 'abs', name: 'abs.name', lines: ['abs.b1', 'abs.b2', 'abs.b3'], hint: 'abs.hint',
+    controls: [['primary', 'ctl.curl']],
+  },
+  {
     key: 'kick', name: 'l3.name', lines: ['l3.b1', 'l3.b2', 'l3.b3'], hint: 'l3.hint',
     controls: [['primary', 'ctl.jump']],
   },

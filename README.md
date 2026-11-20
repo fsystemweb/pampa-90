@@ -2,7 +2,7 @@
 
 **▶ Play it: https://fsystemweb.github.io/pampa-90/** (desktop or phone in landscape, EN / ES)
 
-8-bit web game: you are the best footballer in the world, mid-1990s, and your preseason is in the middle of La Pampa, Argentina. Intro + 5 short minigames (shaving, resistance, heading push-ups, targeting, doctor check).
+8-bit web game: you are the best footballer in the world, mid-1990s, and your preseason is in the middle of La Pampa, Argentina. Intro + 6 short minigames (shaving, resistance, heading push-ups, upside-down abs, targeting, doctor check).
 
 ![Gameplay: title, intro, the minigames and the ending](screenshots/pampa-90.gif)
 
@@ -18,12 +18,12 @@ Vanilla JS (ES modules) + HTML5 Canvas, no build step. See [PLAN.md](PLAN.md).
 | **Briefing** | **Shaving** |
 | ![Resistance](screenshots/resistance.png) | ![Headers](screenshots/headers.png) |
 | **Resistance** | **Heading push-ups** |
-| ![Targeting](screenshots/targeting.png) | ![Doctor check](screenshots/doctor.png) |
-| **Targeting** | **Doctor check** |
-| ![Results](screenshots/results.png) | ![Ending](screenshots/ending.png) |
-| **Results** | **Ending** |
-| ![Share score card](screenshots/scorecard.png) | |
-| **Share score card** | |
+| ![Abs](screenshots/abs.png) | ![Targeting](screenshots/targeting.png) |
+| **Upside-down abs** | **Targeting** |
+| ![Doctor check](screenshots/doctor.png) | ![Results](screenshots/results.png) |
+| **Doctor check** | **Results** |
+| ![Ending](screenshots/ending.png) | ![Share score card](screenshots/scorecard.png) |
+| **Ending** | **Share score card** |
 
 ## Run locally
 
@@ -55,7 +55,7 @@ reference/           mood/pose reference screenshots (NOT shipped)
 | Action | Keyboard | Gamepad | Touch (landscape) |
 |---|---|---|---|
 | Move / lanes / aim | Arrows or WASD | D-pad / stick | D-pad |
-| Primary (shave, hop, push up / head, jump, kick, breathe) | Space, Enter or Z | A | A |
+| Primary (shave, hop, push up / head, curl, jump, kick, breathe) | Space, Enter or Z | A | A |
 | Secondary (dip razor, replay) | B, X or Shift | B | B |
 | Pause menu (resume, reduced flash) | P or Esc | Start | II |
 | Mute | M | | speaker button |
@@ -64,8 +64,9 @@ reference/           mood/pose reference screenshots (NOT shipped)
 1. **Shaving:** arrows move the razor, hold primary to cut, B dips a clogged razor, rinse by holding primary and letting go in the green band.
 2. **Resistance:** primary (or tap) hops, up / down switch lanes. Fill the stamina bar before the timer runs out.
 3. **Heading push-ups:** lying face down, hold primary (A on touch) to load the push-up and let go just before the tossed ball arrives; low / mid / high tosses need more power. Every good header crawls you closer to the cones.
-4. **Targeting:** press primary when the ring closes (perfect / good), press again to lock the aim on the sweeping reticle.
-5. **Doctor check:** hold primary to breathe in, release to breathe out, follow the yellow guide.
+4. **Upside-down abs:** hanging from a branch, hold primary to curl up and let go in the TOP zone of the gauge on the coach's count (clean reps). Rushing, sloppy or bouncing reps make you swing (narrower top zone) and fill the burn bar; when it is full you hang and rest. 20 reps.
+5. **Targeting:** press primary when the ring closes (perfect / good), press again to lock the aim on the sweeping reticle.
+6. **Doctor check:** hold primary to breathe in, release to breathe out, follow the yellow guide.
 
 Scores (best stars and times) are saved in the browser (localStorage); clearing site data resets them. Saves from older versions are migrated when levels are inserted (`src/engine/save.js`).
 
@@ -95,5 +96,5 @@ README media: `npm run shots` rewrites the PNGs in `screenshots/`, `npm run reco
 
 - `index.html#scene=<name>` starts at any scene (e.g. `title`, `dev-ui`).
 - `index.html#scene=dev-sprites&page=N` browses every sprite (arrows = page, Space = background).
-- `index.html#scene=level3` (or `level1` ... `level5`, `results`, `ending`) jumps straight to a level (numbered in the order of `src/data/levels.js`) or scene.
+- `index.html#scene=level3` (or `level1` ... `level6`, `results`, `ending`) jumps straight to a level (numbered in the order of `src/data/levels.js`) or scene.
 - `window.pampa.scenes.current` (or `.name`) in the browser console gives the active scene; `window.pampa.info()` sums up scene, pause reasons, audio state, language and canvas size.
