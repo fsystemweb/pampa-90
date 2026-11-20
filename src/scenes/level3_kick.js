@@ -37,7 +37,7 @@ const KEEPER_X = 160;
 const DIVE = 34;
 const HOVER = 22; // the ball arrives (and hangs while aiming) this high above HIT
 // jump kick timeline (s) and height (px above the feet line, so the foot meets the ball)
-const KICK_H = 36;
+const KICK_H = 38; // +2: the shorter hero (#106) has his contact foot 1 sprite px lower
 const KICK_RISE = 0.18; // wind-up while rising
 const KICK_MIN_TOP = 0.12; // shortest hang in the contact pose (mistimed strikes)
 const KICK_FOLLOW = 0.15; // follow-through, still in the air

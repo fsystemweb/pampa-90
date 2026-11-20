@@ -4,6 +4,10 @@
 //
 // Side view faces RIGHT (flip when drawing). Joint coordinates are in "body
 // space" (0..15); OX shifts them to leave room for limbs that swing out.
+//
+// The hero is a little shorter than everyone else (#106): his figures drop the
+// rows in HERO_DROP (one torso row, one thigh row) and slide down to keep the
+// feet on the same line, so he stands 2px shorter with the same head.
 
 import { Grid } from '../../engine/pix.js';
 import { defineSprite } from '../../engine/sprites.js';
@@ -12,6 +16,8 @@ import { PAL } from '../palette.js';
 const OX = 3;
 const GW = 22;
 const GH = 24;
+const HERO_DROP = [13, 19]; // grid rows removed from the hero's figures
+const HERO_HAIR = PAL.ink; // "black" hair that still reads against the black outline
 
 // ---------------------------------------------------------------- outfits
 const base = {
@@ -24,16 +30,18 @@ const base = {
 
 export const OUTFITS = {
   // the hero: white tee with invented magenta/yellow stripes, blue shorts, yellow boots
-  player: { ...base, headband: PAL.yellow },
+  player: { ...base, hair: HERO_HAIR, drop: HERO_DROP, headband: PAL.yellow },
   // L2 jogging gear: blue windbreaker + navy tracksuit bottoms
   playerJog: {
-    ...base, shirt: PAL.blue, shirtDark: PAL.blueDark, stripe: PAL.teal, stripe2: PAL.white,
+    ...base, hair: HERO_HAIR, drop: HERO_DROP,
+    shirt: PAL.blue, shirtDark: PAL.blueDark, stripe: PAL.teal, stripe2: PAL.white,
     shorts: PAL.ink, shortsDark: PAL.black, long: true, longSleeves: true, headband: PAL.teal,
     shoe: PAL.white, shoeDark: PAL.silver,
   },
   // L4: white top, blue tracksuit pants
   playerTrack: {
-    ...base, stripe: PAL.blue, stripe2: PAL.blue, shorts: PAL.blue, shortsDark: PAL.blueDark,
+    ...base, hair: HERO_HAIR, drop: HERO_DROP,
+    stripe: PAL.blue, stripe2: PAL.blue, shorts: PAL.blue, shortsDark: PAL.blueDark,
     long: true, shoe: PAL.white, shoeDark: PAL.silver, headband: PAL.yellow,
   },
   // L3 friend who crosses the ball: yellow shirt, teal shorts
@@ -121,6 +129,18 @@ function shoe(g, x, y, dark) {
   g.set(x - 1, y + 1, dark ? 'K' : 'k');
 }
 
+/** Remove the outfit's `drop` rows and slide everything above them down (feet stay put). */
+function compact(g, o) {
+  if (!o.drop?.length) return g;
+  const out = new Grid(g.w, g.h);
+  let dy = g.h - 1;
+  for (let y = g.h - 1; y >= 0; y--) {
+    if (o.drop.includes(y)) continue;
+    out.d[dy--] = [...g.d[y]];
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------- side view
 /**
  * Side-view figure facing right.
@@ -175,7 +195,7 @@ export function sideFigure(o, p) {
   leg(p.legF, 8, false);
   arm(p.armF, 8, false);
   p.after?.(g, X);
-  return g;
+  return compact(g, o);
 }
 
 // ---------------------------------------------------------------- front / back view
@@ -231,7 +251,7 @@ export function frontFigure(o, p, back = false) {
   arm(p.armL, 2);
   arm(p.armR, 12);
   p.after?.(g, X);
-  return g;
+  return compact(g, o);
 }
 
 // ---------------------------------------------------------------- poses
