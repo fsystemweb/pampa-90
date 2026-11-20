@@ -1,4 +1,4 @@
-// Level 3 - Targeting (M6, issues #29-#35).
+// Targeting (level key "kick"; level 3 before #108, see src/data/levels.js) - M6, issues #29-#33.
 // Behind-the-player 2.5D view: a friend crosses the ball from the left, a shrinking
 // timing ring sits on the spot where it lands. Press when the ring is closed:
 //   perfect / good  -> scissor kick, then a moving reticle sweeps the goal; press again to lock the aim
@@ -21,6 +21,7 @@ import { drawBar, flash, panel } from '../engine/ui.js';
 import { rect, line, skyBands } from '../engine/draw.js';
 import { SPRITES } from '../data/sprites/index.js';
 import { t } from '../data/strings.js';
+import { levelOf } from '../data/levels.js';
 import { after, clamp, ease } from '../engine/tween.js';
 import { Juice } from '../engine/juice.js';
 
@@ -260,7 +261,7 @@ export class Level3Scene {
     const passed = this.goals >= NEED;
     const stars = passed ? Math.max(1, this.goals - 2) : 0; // 3 goals = 1 star, 5 goals = 3 stars
     after(0.8, () => {
-      scenes.go('results', { level: 3, stars, time: this.elapsed, passed }, { wipe: passed ? 'iris' : 'dither' });
+      scenes.go('results', { level: levelOf('kick'), stars, time: this.elapsed, passed }, { wipe: passed ? 'iris' : 'dither' });
     });
   }
 

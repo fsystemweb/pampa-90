@@ -92,6 +92,16 @@ export const TRACKS = {
     ],
   },
 
+  header: { // heading push-ups (#108): bouncy D major workout march
+    bpm: 112,
+    channels: [
+      { wave: 'pulse25', vol: 0.13, notes: ['D5:2 R:2 F#5:2 A5:2 R:2 F#5:2 D5:4', 'G4:2 R:2 B4:2 D5:2 R:2 B4:2 G4:4', 'A4:2 C#5:2 E5:2 A5:2 G5:2 E5:2 C#5:4', 'D5:4 A4:2 F#4:2 D4:4 R:4'].join(' ') },
+      { wave: 'pulse50', vol: 0.06, notes: [arp('D4', 'F#4', 'A4'), arp('G3', 'B3', 'D4'), arp('A3', 'C#4', 'E4'), arp('D4', 'F#4', 'A4')].join(' ') },
+      { wave: 'triangle', vol: 0.28, notes: ['D2:4 A2:4 D2:4 A2:4', 'G2:4 D3:4 G2:4 D3:4', 'A2:4 E3:4 A2:4 E3:4', 'D2:4 A2:4 D3:4 R:4'].join(' ') },
+      { wave: 'noise', vol: 0.10, notes: rep('K:4 S:4 K:2 K:2 S:4', 4) },
+    ],
+  },
+
   level4: { // doctor check: soft lullaby in F
     bpm: 72,
     channels: [

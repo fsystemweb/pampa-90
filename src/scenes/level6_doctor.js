@@ -1,4 +1,4 @@
-// Level 4 - Doctor check (M7, issues #36-#38).
+// Doctor check (level key "doctor"; level 4 before #108, see src/data/levels.js) - M7, issues #36-#38.
 // Lying on the grass, the doctor watches the monitor. Breathe with the guide:
 // hold primary to breathe in (the bar rises), release to breathe out. Staying
 // within the guide's band lowers the heart rate; mistiming raises it. Hold the
@@ -19,6 +19,7 @@ import { drawBar, panel, Dialog } from '../engine/ui.js';
 import { rect, line, skyBands } from '../engine/draw.js';
 import { SPRITES } from '../data/sprites/index.js';
 import { t } from '../data/strings.js';
+import { levelOf } from '../data/levels.js';
 import { after, clamp } from '../engine/tween.js';
 import { Juice } from '../engine/juice.js';
 
@@ -153,7 +154,7 @@ export class Level4Scene {
     this.dialog.say(t('l4.perfect'));
     const stars = this.resets === 0 ? 3 : this.resets === 1 ? 2 : 1;
     after(3.2, () => {
-      scenes.go('results', { level: 4, stars, time: this.t, passed: true }, { wipe: 'iris' });
+      scenes.go('results', { level: levelOf('doctor'), stars, time: this.t, passed: true }, { wipe: 'iris' });
     });
   }
 

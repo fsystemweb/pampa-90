@@ -2,6 +2,7 @@
 //
 // Serves the repo root with `python3 -m http.server`, loads the game and walks the whole flow
 // with the keyboard: title -> intro -> briefing -> each minigame -> results -> ending -> share.
+// Also checks that a save from the 4-level game is migrated (engine/save.js).
 // Fails on any console error, uncaught exception or failed request, on a blank frame, or when a
 // scene transition does not happen. Also covers: EN + ES at load, mute, pause, the score card
 // (Web Share and the download fallback), and touch / landscape / portrait on mobile emulation.
@@ -114,8 +115,12 @@ async function runBrowser(name) {
     await sleep(900);
     await shot(page, 'briefing-1');
 
-    const results = [[3, 21.4], [2, 33.0], [3, 18.2], [1, 40.5]];
-    for (let lvl = 1; lvl <= 4; lvl++) {
+    // [stars, time] per level, in the order of src/data/levels.js
+    const results = [[3, 21.4], [2, 33.0], [2, 44.0], [3, 18.2], [1, 40.5]];
+    const levelCount = await page.evaluate(async () => (await import('./src/data/levels.js')).LEVEL_COUNT);
+    check(levelCount === results.length, `smoke results cover ${results.length} levels, the game has ${levelCount}`);
+    const totalStars = results.reduce((n, [st]) => n + st, 0);
+    for (let lvl = 1; lvl <= levelCount; lvl++) {
       await pressUntil(page, 'Enter', `level${lvl}`);
       await sleep(1500);
       // a little real input in every minigame
@@ -141,7 +146,7 @@ async function runBrowser(name) {
       await waitScene(page, 'results');
       await sleep(1900);
       await shot(page, `results-${lvl}`);
-      await pressUntil(page, 'Enter', lvl < 4 ? 'briefing' : 'ending');
+      await pressUntil(page, 'Enter', lvl < levelCount ? 'briefing' : 'ending');
     }
 
     // ending: wait for the menu, then SHARE (down, down, Enter)
@@ -154,7 +159,8 @@ async function runBrowser(name) {
     const shared = await page.evaluate(() => window.__shared);
     if (shared) {
       check(shared.url === PLAY_URL, `share url is ${shared.url}`);
-      check(/9\/12/.test(shared.text), `share text has no 9/12 total: ${shared.text}`);
+      const want = `${totalStars}/${levelCount * 3}`;
+      check(shared.text.includes(want), `share text has no ${want} total: ${shared.text}`);
       const f = shared.files[0];
       check(f && f.type === 'image/png', 'share has no PNG file');
       if (f) {
@@ -179,7 +185,8 @@ async function runBrowser(name) {
     await es.addInitScript(() => {
       try {
         localStorage.setItem('pampa90.lang', 'es');
-        localStorage.setItem('pampa90.save', JSON.stringify({ levels: { 1: { stars: 3, time: 20.1 }, 2: { stars: 2, time: 31 }, 3: { stars: 3, time: 17.5 }, 4: { stars: 3, time: 38 } } }));
+        // a version-1 save from the 4-level game (no `v`): must be migrated on load
+        localStorage.setItem('pampa90.save', JSON.stringify({ levels: { 1: { stars: 3, time: 20.1 }, 2: { stars: 2, time: 31 }, 3: { stars: 1, time: 17.5 }, 4: { stars: 3, time: 38 } } }));
       } catch { /* ignore */ }
       // no Web Share API: force the download + clipboard fallback
       try { delete Navigator.prototype.share; delete Navigator.prototype.canShare; } catch { /* ignore */ }
@@ -192,6 +199,10 @@ async function runBrowser(name) {
     await waitScene(p2, 'title');
     check((await info(p2)).lang === 'es', 'saved language ES not applied at load');
     check((await p2.evaluate(() => document.documentElement.lang)) === 'es', '<html lang> not es at load');
+    // save migration: Targeting 3 -> 4 and Doctor check 4 -> 5, the new level 3 starts empty
+    const saved = await p2.evaluate(() => JSON.parse(localStorage.getItem('pampa90.save')));
+    check(saved?.v === 2 && !saved.levels[3] && saved.levels[4]?.stars === 1 && saved.levels[5]?.stars === 3 && saved.levels[1]?.stars === 3,
+      `old save not migrated: ${JSON.stringify(saved)}`);
     await sleep(500);
     await shot(p2, 'title-es-load');
     await goScene(p2, 'ending');
@@ -251,6 +262,19 @@ async function runBrowser(name) {
       await sleep(300);
       await shot(mp, 'mobile-level2');
       await mp.screenshot({ path: path.join(OUT, `${String(++shotN).padStart(2, '0')}-mobile-page.png`) });
+      // heading push-ups: hold the A button to load, let go to push up
+      await goScene(mp, 'level3', { level: 3 });
+      await sleep(800);
+      const abtn = mp.locator('#touch .a');
+      await abtn.dispatchEvent('pointerdown', { pointerId: 7, pointerType: 'touch', isPrimary: true, bubbles: true });
+      await sleep(350);
+      check(await mp.evaluate(() => window.pampa.scenes.current.loading === true), 'mobile: holding A did not load the push-up');
+      await shot(mp, 'mobile-level3-hold');
+      await abtn.dispatchEvent('pointerup', { pointerId: 7, pointerType: 'touch', isPrimary: true, bubbles: true });
+      await sleep(100);
+      check(await mp.evaluate(() => { const s = window.pampa.scenes.current; return !s.loading && s.releaseT > 0; }), 'mobile: releasing A did not push up');
+      await goScene(mp, 'level2', { level: 2 });
+      await sleep(300);
       // the II button pauses
       await mp.locator('#touch .pausebtn').tap();
       await sleep(200);

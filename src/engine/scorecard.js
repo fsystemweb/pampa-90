@@ -62,9 +62,10 @@ export function drawScoreCard(c, s = runSummary()) {
   drawText(c, t('card.total', { n: s.total, max: s.max }), W / 2, by + 36, { align: 'center', color: PAL.yellow, shadow: PAL.black });
 
   rect(c, PAL.ink, bx + 6, by + 48, bw - 12, 1);
+  const rowH = Math.min(16, Math.floor((bh - 58) / s.levels.length)); // 4 levels: 16px, 5: 13px, 6: 11px
   s.levels.forEach((l, i) => {
-    const y = by + 56 + i * 16;
-    if (i % 2 === 0) rect(c, PAL.blue, bx + 4, y - 4, bw - 8, 15);
+    const y = by + 54 + i * rowH + Math.floor((rowH - 7) / 2);
+    if (i % 2 === 0) rect(c, PAL.blue, bx + 4, by + 52 + i * rowH, bw - 8, rowH);
     drawText(c, `${i + 1}`, bx + 8, y, { color: PAL.silver });
     drawText(c, l.name, bx + 18, y, { color: PAL.white, shadow: PAL.black });
     const sx = bx + bw - 8 - starsWidth(3);

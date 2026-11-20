@@ -22,6 +22,7 @@ import { drawBar, panel } from '../engine/ui.js';
 import { rect, skyBands } from '../engine/draw.js';
 import { SPRITES } from '../data/sprites/index.js';
 import { t } from '../data/strings.js';
+import { levelOf } from '../data/levels.js';
 import { tween, after } from '../engine/tween.js';
 import { Juice } from '../engine/juice.js';
 
@@ -244,7 +245,7 @@ export class Level2Scene {
     playSfx('win');
     const stars = this.hits === 0 ? 3 : this.hits <= 1 ? 2 : 1;
     after(1.6, () => {
-      scenes.go('results', { level: 2, stars, time: this.elapsed, passed: true }, { wipe: 'iris' });
+      scenes.go('results', { level: levelOf('run'), stars, time: this.elapsed, passed: true }, { wipe: 'iris' });
     });
   }
 
@@ -254,7 +255,7 @@ export class Level2Scene {
     this.say('l2.fail', 1.8);
     playSfx('hurt');
     after(1.6, () => {
-      scenes.go('results', { level: 2, stars: 0, time: this.elapsed, passed: false }, { wipe: 'dither' });
+      scenes.go('results', { level: levelOf('run'), stars: 0, time: this.elapsed, passed: false }, { wipe: 'dither' });
     });
   }
 

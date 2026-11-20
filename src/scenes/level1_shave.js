@@ -19,6 +19,7 @@ import { drawHearts, drawBar } from '../engine/ui.js';
 import { rect, disc, skyBands } from '../engine/draw.js';
 import { SPRITES } from '../data/sprites/index.js';
 import { t } from '../data/strings.js';
+import { levelOf } from '../data/levels.js';
 import { tween, after, clamp, ease } from '../engine/tween.js';
 import { Juice } from '../engine/juice.js';
 
@@ -403,7 +404,7 @@ export class Level1Scene {
     this.totalTime = this.shaveTime;
     const stars = Math.max(1, 3 - this.nicks - (this.shaveTime > 45 ? 1 : 0));
     after(1.0, () => {
-      scenes.go('results', { level: 1, stars, time: this.shaveTime, passed: true }, { wipe: 'iris' });
+      scenes.go('results', { level: levelOf('shave'), stars, time: this.shaveTime, passed: true }, { wipe: 'iris' });
     });
   }
 
@@ -412,7 +413,7 @@ export class Level1Scene {
     this.done = true;
     playSfx('fail');
     after(0.6, () => {
-      scenes.go('results', { level: 1, stars: 0, time: this.shaveTime, passed: false }, { wipe: 'dither' });
+      scenes.go('results', { level: levelOf('shave'), stars: 0, time: this.shaveTime, passed: false }, { wipe: 'dither' });
     });
   }
 

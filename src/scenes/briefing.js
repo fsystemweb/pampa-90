@@ -1,7 +1,7 @@
 // Level briefing card shown before every level:
-//   header (LEVEL n / 4 + name) + "Preseason readiness" bar, animated icon,
+//   header (LEVEL n / LEVEL_COUNT + name) + "Preseason readiness" bar, animated icon,
 //   3 typewriter lines, controls for the device in use, a one-line tip, START prompt.
-// Params: { level: 1..4 }
+// Params: { level: 1..LEVEL_COUNT }
 
 import { W, H } from '../data/config.js';
 import { PAL } from '../data/palette.js';
@@ -26,8 +26,8 @@ const ICON = { x: 12, y: 48, w: 96, h: 74 };
 
 // ---------------------------------------------------------------- animated icons
 // Drawn inside the icon frame (0,0 = frame interior top-left, 92x70).
-const ICONS = {
-  1(c, tt) { // razor sweeping through foam, bucket below
+const ICONS = { // keyed by the level key in src/data/levels.js
+  shave(c, tt) { // razor sweeping through foam, bucket below
     disc(c, PAL.white, 46, 26, 17);
     disc(c, PAL.white, 32, 30, 10);
     disc(c, PAL.white, 60, 31, 11);
@@ -36,7 +36,7 @@ const ICONS = {
     drawSprite(c, SPRITES.shave.razor, rx, 26, { anchor: 'tl', scale: 2 });
     drawSprite(c, SPRITES.shave.bucketWater, 46, 69, { scale: 1 });
   },
-  2(c, tt) { // jogger + a cow passing in the background
+  run(c, tt) { // jogger + a cow passing in the background
     rect(c, PAL.grass, 0, 52, 92, 18);
     rect(c, PAL.dirt, 0, 58, 92, 8);
     const cx = 100 - ((tt * 20) % 130);
@@ -44,7 +44,18 @@ const ICONS = {
     drawSprite(c, frameAt(SPRITES.playerJog.run, tt, 9), 40, 68 + (Math.floor(tt * 9) % 2 ? -1 : 0), { scale: 2 });
     if (Math.floor(tt * 2) % 2 === 0) drawSprite(c, SPRITES.icons.warn, 78, 22);
   },
-  3(c, tt) { // kick pose + ball arc
+  header(c, tt) { // prone push-up heading a tossed ball
+    rect(c, PAL.grass, 0, 56, 92, 14);
+    const P = SPRITES.playerJog.prone;
+    const p = (tt * 0.8) % 1; // one toss per cycle
+    const up = p > 0.62 && p < 0.86;
+    drawSprite(c, up ? P.up[2] : p > 0.3 ? P.load : P.flat, 26, 64, { scale: 2 });
+    const bx = p < 0.72 ? 88 - (p / 0.72) * 52 : 36 + ((p - 0.72) / 0.28) * 52;
+    const by = p < 0.72 ? 30 - Math.sin((p / 0.72) * Math.PI) * 16 + (p / 0.72) * 6 : 36 - Math.sin(((p - 0.72) / 0.28) * Math.PI) * 18;
+    drawSprite(c, SPRITES.ball.roll[Math.floor(tt * 12) % 4], bx, by, { scale: 2 });
+    drawSprite(c, SPRITES.run.cone, 84, 66);
+  },
+  kick(c, tt) { // kick pose + ball arc
     rect(c, PAL.grass, 0, 56, 92, 14);
     const k = Math.floor(tt * 2.5) % 3;
     drawSprite(c, SPRITES.player.kick[k], 30, 66, { scale: 2 });
@@ -52,7 +63,7 @@ const ICONS = {
     drawSprite(c, SPRITES.ball.roll[Math.floor(tt * 12) % 4], 40 + p * 46, 54 - Math.sin(p * Math.PI) * 38, { scale: 2 });
     drawSprite(c, SPRITES.field.goalPost, 82, 62, { scale: 1 });
   },
-  4(c, tt) { // lying player + heartbeat monitor
+  doctor(c, tt) { // lying player + heartbeat monitor
     rect(c, PAL.grass, 0, 54, 92, 16);
     drawSprite(c, SPRITES.playerTrack.lying, 4, 26, { anchor: 'tl', scale: 2 });
     const ok = Math.floor(tt * 2) % 2 === 0;
@@ -139,7 +150,7 @@ export class BriefingScene {
     c.rect(ICON.x + 2, ICON.y + 2, ICON.w - 4, ICON.h - 4);
     c.clip();
     c.translate(ICON.x + 2, ICON.y + 2);
-    ICONS[this.level]?.(c, this.t);
+    ICONS[this.def.key]?.(c, this.t);
     c.restore();
 
     // typewriter bullets

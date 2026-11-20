@@ -44,6 +44,28 @@ export async function waitScene(page, name, timeout = 15000) {
 export const goScene = (page, name, params = null) =>
   page.evaluate(([n, p]) => window.pampa.scenes.go(n, p, { wipe: 'none' }), [name, params]);
 
+/** Jump to the level with this key (src/data/levels.js), whatever its number. Returns its def. */
+export async function goLevel(page, key) {
+  const def = await page.evaluate(async (k) => {
+    const { LEVELS } = await import('./src/data/levels.js');
+    const d = LEVELS.find((l) => l.key === k);
+    return d && { id: d.id, scene: d.scene };
+  }, key);
+  if (!def) throw new Error(`no level with key ${key}`);
+  await goScene(page, def.scene, { level: def.id });
+  return def;
+}
+
+/** Hold primary through the next toss in the heading push-ups and let go just before the ball arrives. */
+export async function headerOnce(page, tail = 90) {
+  await page.waitForFunction(() => window.pampa.scenes.current.phase === 'flight', null, { polling: 'raf', timeout: 10000 });
+  await page.waitForFunction(() => { const s = window.pampa.scenes.current; return (s.elapsed - s.flightT0) / s.flight > 0.45; }, null, { polling: 'raf' });
+  await page.keyboard.down('Space');
+  await page.waitForFunction(() => { const s = window.pampa.scenes.current; return s.elapsed >= s.flightT0 + s.flight - 0.15; }, null, { polling: 'raf' });
+  await page.keyboard.up('Space');
+  await sleep(tail);
+}
+
 /** Mean / spread / colour count of a PNG, measured in a helper page: catches blank frames. */
 export async function analyse(helper, png) {
   return helper.evaluate(async (b64) => {

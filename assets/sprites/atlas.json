@@ -1,6 +1,6 @@
 {
- "width": 506,
- "height": 266,
+ "width": 510,
+ "height": 284,
  "sprites": [
   {
    "name": "shave.post",
@@ -279,9 +279,45 @@
    ]
   },
   {
-   "name": "keeper.stand",
+   "name": "friend.toss",
    "frame": 0,
    "x": 106,
+   "y": 164,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "friend.toss",
+   "frame": 1,
+   "x": 132,
+   "y": 164,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "friend.catch",
+   "frame": 0,
+   "x": 158,
+   "y": 164,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "keeper.stand",
+   "frame": 0,
+   "x": 184,
    "y": 164,
    "w": 24,
    "h": 26,
@@ -293,7 +329,7 @@
   {
    "name": "keeper.guard",
    "frame": 0,
-   "x": 132,
+   "x": 210,
    "y": 164,
    "w": 24,
    "h": 26,
@@ -305,7 +341,7 @@
   {
    "name": "keeper.jump",
    "frame": 0,
-   "x": 158,
+   "x": 236,
    "y": 164,
    "w": 24,
    "h": 26,
@@ -317,7 +353,7 @@
   {
    "name": "doctor.stand",
    "frame": 0,
-   "x": 184,
+   "x": 262,
    "y": 164,
    "w": 24,
    "h": 26,
@@ -329,7 +365,7 @@
   {
    "name": "doctor.sit",
    "frame": 0,
-   "x": 210,
+   "x": 288,
    "y": 164,
    "w": 24,
    "h": 26,
@@ -341,7 +377,7 @@
   {
    "name": "doctor.front",
    "frame": 0,
-   "x": 236,
+   "x": 314,
    "y": 164,
    "w": 24,
    "h": 26,
@@ -353,7 +389,7 @@
   {
    "name": "doctor.thumbsUp",
    "frame": 0,
-   "x": 262,
+   "x": 340,
    "y": 164,
    "w": 24,
    "h": 26,
@@ -365,42 +401,6 @@
   {
    "name": "player.idle",
    "frame": 0,
-   "x": 288,
-   "y": 164,
-   "w": 24,
-   "h": 26,
-   "anchor": [
-    12,
-    26
-   ]
-  },
-  {
-   "name": "player.run",
-   "frame": 0,
-   "x": 314,
-   "y": 164,
-   "w": 24,
-   "h": 26,
-   "anchor": [
-    12,
-    26
-   ]
-  },
-  {
-   "name": "player.run",
-   "frame": 1,
-   "x": 340,
-   "y": 164,
-   "w": 24,
-   "h": 26,
-   "anchor": [
-    12,
-    26
-   ]
-  },
-  {
-   "name": "player.run",
-   "frame": 2,
    "x": 366,
    "y": 164,
    "w": 24,
@@ -412,8 +412,44 @@
   },
   {
    "name": "player.run",
-   "frame": 3,
+   "frame": 0,
    "x": 392,
+   "y": 164,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "player.run",
+   "frame": 1,
+   "x": 418,
+   "y": 164,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "player.run",
+   "frame": 2,
+   "x": 444,
+   "y": 164,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "player.run",
+   "frame": 3,
+   "x": 470,
    "y": 164,
    "w": 24,
    "h": 26,
@@ -425,42 +461,6 @@
   {
    "name": "player.jump",
    "frame": 0,
-   "x": 418,
-   "y": 164,
-   "w": 24,
-   "h": 26,
-   "anchor": [
-    12,
-    26
-   ]
-  },
-  {
-   "name": "player.kick",
-   "frame": 0,
-   "x": 444,
-   "y": 164,
-   "w": 24,
-   "h": 26,
-   "anchor": [
-    12,
-    26
-   ]
-  },
-  {
-   "name": "player.kick",
-   "frame": 1,
-   "x": 470,
-   "y": 164,
-   "w": 24,
-   "h": 26,
-   "anchor": [
-    12,
-    26
-   ]
-  },
-  {
-   "name": "player.kick",
-   "frame": 2,
    "x": 2,
    "y": 192,
    "w": 24,
@@ -471,7 +471,7 @@
    ]
   },
   {
-   "name": "player.back",
+   "name": "player.kick",
    "frame": 0,
    "x": 28,
    "y": 192,
@@ -483,8 +483,8 @@
    ]
   },
   {
-   "name": "player.backJump",
-   "frame": 0,
+   "name": "player.kick",
+   "frame": 1,
    "x": 54,
    "y": 192,
    "w": 24,
@@ -495,8 +495,8 @@
    ]
   },
   {
-   "name": "player.front",
-   "frame": 0,
+   "name": "player.kick",
+   "frame": 2,
    "x": 80,
    "y": 192,
    "w": 24,
@@ -507,7 +507,7 @@
    ]
   },
   {
-   "name": "playerJog.idle",
+   "name": "player.back",
    "frame": 0,
    "x": 106,
    "y": 192,
@@ -519,7 +519,7 @@
    ]
   },
   {
-   "name": "playerJog.run",
+   "name": "player.backJump",
    "frame": 0,
    "x": 132,
    "y": 192,
@@ -531,8 +531,8 @@
    ]
   },
   {
-   "name": "playerJog.run",
-   "frame": 1,
+   "name": "player.front",
+   "frame": 0,
    "x": 158,
    "y": 192,
    "w": 24,
@@ -543,8 +543,8 @@
    ]
   },
   {
-   "name": "playerJog.run",
-   "frame": 2,
+   "name": "playerJog.idle",
+   "frame": 0,
    "x": 184,
    "y": 192,
    "w": 24,
@@ -556,8 +556,44 @@
   },
   {
    "name": "playerJog.run",
-   "frame": 3,
+   "frame": 0,
    "x": 210,
+   "y": 192,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "playerJog.run",
+   "frame": 1,
+   "x": 236,
+   "y": 192,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "playerJog.run",
+   "frame": 2,
+   "x": 262,
+   "y": 192,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "playerJog.run",
+   "frame": 3,
+   "x": 288,
    "y": 192,
    "w": 24,
    "h": 26,
@@ -569,7 +605,7 @@
   {
    "name": "playerJog.jump",
    "frame": 0,
-   "x": 236,
+   "x": 314,
    "y": 192,
    "w": 24,
    "h": 26,
@@ -581,42 +617,6 @@
   {
    "name": "playerTrack.idle",
    "frame": 0,
-   "x": 262,
-   "y": 192,
-   "w": 24,
-   "h": 26,
-   "anchor": [
-    12,
-    26
-   ]
-  },
-  {
-   "name": "playerTrack.run",
-   "frame": 0,
-   "x": 288,
-   "y": 192,
-   "w": 24,
-   "h": 26,
-   "anchor": [
-    12,
-    26
-   ]
-  },
-  {
-   "name": "playerTrack.run",
-   "frame": 1,
-   "x": 314,
-   "y": 192,
-   "w": 24,
-   "h": 26,
-   "anchor": [
-    12,
-    26
-   ]
-  },
-  {
-   "name": "playerTrack.run",
-   "frame": 2,
    "x": 340,
    "y": 192,
    "w": 24,
@@ -628,8 +628,44 @@
   },
   {
    "name": "playerTrack.run",
-   "frame": 3,
+   "frame": 0,
    "x": 366,
+   "y": 192,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "playerTrack.run",
+   "frame": 1,
+   "x": 392,
+   "y": 192,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "playerTrack.run",
+   "frame": 2,
+   "x": 418,
+   "y": 192,
+   "w": 24,
+   "h": 26,
+   "anchor": [
+    12,
+    26
+   ]
+  },
+  {
+   "name": "playerTrack.run",
+   "frame": 3,
+   "x": 444,
    "y": 192,
    "w": 24,
    "h": 26,
@@ -641,7 +677,7 @@
   {
    "name": "playerTrack.jump",
    "frame": 0,
-   "x": 392,
+   "x": 470,
    "y": 192,
    "w": 24,
    "h": 26,
@@ -653,42 +689,6 @@
   {
    "name": "friend.lying",
    "frame": 0,
-   "x": 418,
-   "y": 192,
-   "w": 26,
-   "h": 24,
-   "anchor": [
-    13,
-    24
-   ]
-  },
-  {
-   "name": "keeper.diveR",
-   "frame": 0,
-   "x": 446,
-   "y": 192,
-   "w": 26,
-   "h": 24,
-   "anchor": [
-    13,
-    24
-   ]
-  },
-  {
-   "name": "keeper.diveL",
-   "frame": 0,
-   "x": 474,
-   "y": 192,
-   "w": 26,
-   "h": 24,
-   "anchor": [
-    13,
-    24
-   ]
-  },
-  {
-   "name": "player.lying",
-   "frame": 0,
    "x": 2,
    "y": 220,
    "w": 26,
@@ -699,7 +699,7 @@
    ]
   },
   {
-   "name": "playerJog.lying",
+   "name": "keeper.diveR",
    "frame": 0,
    "x": 30,
    "y": 220,
@@ -711,7 +711,7 @@
    ]
   },
   {
-   "name": "playerTrack.lying",
+   "name": "keeper.diveL",
    "frame": 0,
    "x": 58,
    "y": 220,
@@ -723,9 +723,45 @@
    ]
   },
   {
-   "name": "run.treeSmall",
+   "name": "player.lying",
    "frame": 0,
    "x": 86,
+   "y": 220,
+   "w": 26,
+   "h": 24,
+   "anchor": [
+    13,
+    24
+   ]
+  },
+  {
+   "name": "playerJog.lying",
+   "frame": 0,
+   "x": 114,
+   "y": 220,
+   "w": 26,
+   "h": 24,
+   "anchor": [
+    13,
+    24
+   ]
+  },
+  {
+   "name": "playerTrack.lying",
+   "frame": 0,
+   "x": 142,
+   "y": 220,
+   "w": 26,
+   "h": 24,
+   "anchor": [
+    13,
+    24
+   ]
+  },
+  {
+   "name": "run.treeSmall",
+   "frame": 0,
+   "x": 170,
    "y": 220,
    "w": 18,
    "h": 24,
@@ -735,9 +771,93 @@
    ]
   },
   {
+   "name": "playerJog.prone.flat",
+   "frame": 0,
+   "x": 190,
+   "y": 220,
+   "w": 34,
+   "h": 22,
+   "anchor": [
+    22,
+    21
+   ]
+  },
+  {
+   "name": "playerJog.prone.load",
+   "frame": 0,
+   "x": 226,
+   "y": 220,
+   "w": 34,
+   "h": 22,
+   "anchor": [
+    22,
+    21
+   ]
+  },
+  {
+   "name": "playerJog.prone.up",
+   "frame": 0,
+   "x": 262,
+   "y": 220,
+   "w": 34,
+   "h": 22,
+   "anchor": [
+    22,
+    21
+   ]
+  },
+  {
+   "name": "playerJog.prone.up",
+   "frame": 1,
+   "x": 298,
+   "y": 220,
+   "w": 34,
+   "h": 22,
+   "anchor": [
+    22,
+    21
+   ]
+  },
+  {
+   "name": "playerJog.prone.up",
+   "frame": 2,
+   "x": 334,
+   "y": 220,
+   "w": 34,
+   "h": 22,
+   "anchor": [
+    22,
+    21
+   ]
+  },
+  {
+   "name": "playerJog.prone.crawl",
+   "frame": 0,
+   "x": 370,
+   "y": 220,
+   "w": 34,
+   "h": 22,
+   "anchor": [
+    22,
+    21
+   ]
+  },
+  {
+   "name": "playerJog.prone.crawl",
+   "frame": 1,
+   "x": 406,
+   "y": 220,
+   "w": 34,
+   "h": 22,
+   "anchor": [
+    22,
+    21
+   ]
+  },
+  {
    "name": "cow.stand",
    "frame": 0,
-   "x": 106,
+   "x": 442,
    "y": 220,
    "w": 32,
    "h": 22,
@@ -749,7 +869,7 @@
   {
    "name": "cow.walk",
    "frame": 0,
-   "x": 140,
+   "x": 476,
    "y": 220,
    "w": 32,
    "h": 22,
@@ -761,8 +881,8 @@
   {
    "name": "cow.walk",
    "frame": 1,
-   "x": 174,
-   "y": 220,
+   "x": 2,
+   "y": 246,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -773,8 +893,8 @@
   {
    "name": "cow.walk",
    "frame": 2,
-   "x": 208,
-   "y": 220,
+   "x": 36,
+   "y": 246,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -785,8 +905,8 @@
   {
    "name": "cow.walk",
    "frame": 3,
-   "x": 242,
-   "y": 220,
+   "x": 70,
+   "y": 246,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -797,8 +917,8 @@
   {
    "name": "cow.moo",
    "frame": 0,
-   "x": 276,
-   "y": 220,
+   "x": 104,
+   "y": 246,
    "w": 32,
    "h": 22,
    "anchor": [
@@ -809,8 +929,8 @@
   {
    "name": "clinic.monitorOk",
    "frame": 0,
-   "x": 310,
-   "y": 220,
+   "x": 138,
+   "y": 246,
    "w": 28,
    "h": 22,
    "anchor": [
@@ -821,8 +941,8 @@
   {
    "name": "clinic.monitorBad",
    "frame": 0,
-   "x": 340,
-   "y": 220,
+   "x": 168,
+   "y": 246,
    "w": 28,
    "h": 22,
    "anchor": [
@@ -833,8 +953,8 @@
   {
    "name": "clinic.monitorOff",
    "frame": 0,
-   "x": 370,
-   "y": 220,
+   "x": 198,
+   "y": 246,
    "w": 28,
    "h": 22,
    "anchor": [
@@ -845,8 +965,8 @@
   {
    "name": "shave.bucket",
    "frame": 0,
-   "x": 400,
-   "y": 220,
+   "x": 228,
+   "y": 246,
    "w": 22,
    "h": 20,
    "anchor": [
@@ -857,8 +977,8 @@
   {
    "name": "shave.bucketWater",
    "frame": 0,
-   "x": 424,
-   "y": 220,
+   "x": 252,
+   "y": 246,
    "w": 22,
    "h": 20,
    "anchor": [
@@ -869,8 +989,8 @@
   {
    "name": "intro.plane",
    "frame": 0,
-   "x": 448,
-   "y": 220,
+   "x": 276,
+   "y": 246,
    "w": 38,
    "h": 18,
    "anchor": [
@@ -881,7 +1001,7 @@
   {
    "name": "intro.plane",
    "frame": 1,
-   "x": 2,
+   "x": 316,
    "y": 246,
    "w": 38,
    "h": 18,
@@ -893,7 +1013,7 @@
   {
    "name": "tiles.grass",
    "frame": 0,
-   "x": 42,
+   "x": 356,
    "y": 246,
    "w": 16,
    "h": 16,
@@ -905,7 +1025,7 @@
   {
    "name": "tiles.grassDark",
    "frame": 0,
-   "x": 60,
+   "x": 374,
    "y": 246,
    "w": 16,
    "h": 16,
@@ -917,7 +1037,7 @@
   {
    "name": "tiles.dirt",
    "frame": 0,
-   "x": 78,
+   "x": 392,
    "y": 246,
    "w": 16,
    "h": 16,
@@ -929,7 +1049,7 @@
   {
    "name": "clinic.clipboard",
    "frame": 0,
-   "x": 96,
+   "x": 410,
    "y": 246,
    "w": 12,
    "h": 15,
@@ -941,7 +1061,7 @@
   {
    "name": "intro.duffel",
    "frame": 0,
-   "x": 110,
+   "x": 424,
    "y": 246,
    "w": 22,
    "h": 14,
@@ -953,7 +1073,7 @@
   {
    "name": "icons.warn",
    "frame": 0,
-   "x": 134,
+   "x": 448,
    "y": 246,
    "w": 13,
    "h": 12,
@@ -965,7 +1085,7 @@
   {
    "name": "intro.cloud",
    "frame": 0,
-   "x": 149,
+   "x": 463,
    "y": 246,
    "w": 36,
    "h": 12,
@@ -977,8 +1097,8 @@
   {
    "name": "clinic.cuff",
    "frame": 0,
-   "x": 187,
-   "y": 246,
+   "x": 2,
+   "y": 270,
    "w": 18,
    "h": 12,
    "anchor": [
@@ -989,8 +1109,8 @@
   {
    "name": "shave.cup",
    "frame": 0,
-   "x": 207,
-   "y": 246,
+   "x": 22,
+   "y": 270,
    "w": 12,
    "h": 11,
    "anchor": [
@@ -1001,8 +1121,8 @@
   {
    "name": "shave.cupWater",
    "frame": 0,
-   "x": 221,
-   "y": 246,
+   "x": 36,
+   "y": 270,
    "w": 12,
    "h": 11,
    "anchor": [
@@ -1013,8 +1133,8 @@
   {
    "name": "run.molehill",
    "frame": 0,
-   "x": 235,
-   "y": 246,
+   "x": 50,
+   "y": 270,
    "w": 18,
    "h": 11,
    "anchor": [
@@ -1025,8 +1145,8 @@
   {
    "name": "ball.roll",
    "frame": 0,
-   "x": 255,
-   "y": 246,
+   "x": 70,
+   "y": 270,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1037,8 +1157,8 @@
   {
    "name": "ball.roll",
    "frame": 1,
-   "x": 267,
-   "y": 246,
+   "x": 82,
+   "y": 270,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1049,8 +1169,8 @@
   {
    "name": "ball.roll",
    "frame": 2,
-   "x": 279,
-   "y": 246,
+   "x": 94,
+   "y": 270,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1061,8 +1181,8 @@
   {
    "name": "ball.roll",
    "frame": 3,
-   "x": 291,
-   "y": 246,
+   "x": 106,
+   "y": 270,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1073,8 +1193,8 @@
   {
    "name": "ball.still",
    "frame": 0,
-   "x": 303,
-   "y": 246,
+   "x": 118,
+   "y": 270,
    "w": 10,
    "h": 10,
    "anchor": [
@@ -1083,10 +1203,22 @@
    ]
   },
   {
+   "name": "run.cone",
+   "frame": 0,
+   "x": 130,
+   "y": 270,
+   "w": 9,
+   "h": 10,
+   "anchor": [
+    4,
+    9
+   ]
+  },
+  {
    "name": "run.puddle",
    "frame": 0,
-   "x": 315,
-   "y": 246,
+   "x": 141,
+   "y": 270,
    "w": 22,
    "h": 9,
    "anchor": [
@@ -1097,8 +1229,8 @@
   {
    "name": "shave.razor",
    "frame": 0,
-   "x": 339,
-   "y": 246,
+   "x": 165,
+   "y": 270,
    "w": 20,
    "h": 8,
    "anchor": [
@@ -1109,8 +1241,8 @@
   {
    "name": "icons.bubbleTail",
    "frame": 0,
-   "x": 361,
-   "y": 246,
+   "x": 187,
+   "y": 270,
    "w": 9,
    "h": 7,
    "anchor": [
@@ -1121,8 +1253,8 @@
   {
    "name": "ball.shadow",
    "frame": 0,
-   "x": 372,
-   "y": 246,
+   "x": 198,
+   "y": 270,
    "w": 10,
    "h": 3,
    "anchor": [
@@ -1133,8 +1265,8 @@
   {
    "name": "run.tuft",
    "frame": 0,
-   "x": 384,
-   "y": 246,
+   "x": 210,
+   "y": 270,
    "w": 5,
    "h": 3,
    "anchor": [
